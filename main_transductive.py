@@ -334,8 +334,8 @@ def main(args):
         results_path = f'save_middle_results_optc/{name}.pt'
         torch.save(data, results_path)
 
-        print(f"\n===== Evaluating with method_12_with_different_normalization =====")
-        method_12_with_different_normalization(results_path, args.data_path, args.ground_truth_path)
+        print(f"\n===== Evaluating with method_12_with_different_normalization (normalization={args.normalization_method}) =====")
+        method_12_with_different_normalization(results_path, args.data_path, args.ground_truth_path, normalization_method=args.normalization_method)
 
 
 if __name__ == "__main__":
