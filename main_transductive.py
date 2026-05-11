@@ -226,6 +226,11 @@ def main(args):
         )
     weights = torch.tensor(DATASET_WEIGHTS[dataset_name], dtype=torch.float32)
 
+    if not os.path.exists(args.data_path):
+        print(f"[main] Processed data not found at '{args.data_path}'. Running preprocessing...")
+        from preprocess import preprocess_dataset
+        preprocess_dataset(dataset_name, args.raw_data_dir, output_path=args.data_path)
+
     (graphs, _, num_features, edge_features, num_classes, reverse_graphs) = torch.load(args.data_path)
 
     graphs_2 = copy.deepcopy(graphs)

@@ -88,6 +88,7 @@ do
                                   --use_cfg \
                                   --data_path $data_path \
                                   --ground_truth_path $ground_truth_path \
+                                  --raw_data_dir ../raw_data \
                                   >> optc_log/optc_h051_$device.log  &  \
 
                                 ((counter++))
