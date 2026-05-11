@@ -50,6 +50,8 @@ def build_args():
                         help="Path to the preprocessed graph .pt file")
     parser.add_argument("--ground_truth_path", type=str, required=True,
                         help="Path to the ground truth node IDs .pt file")
+    parser.add_argument("--raw_data_dir", type=str, default="../raw_data",
+                        help="Parent dir of raw per-graph .pt files; used for auto-preprocessing if --data_path is missing")
     parser.add_argument("--max_epoch", type=int, default=200,
                         help="number of training epochs")
     parser.add_argument("--warmup_steps", type=int, default=-1)
