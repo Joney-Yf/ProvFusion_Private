@@ -330,8 +330,8 @@ def main(args):
 
         data = (node_level_distances_1, val_baseline, emb_baseline, node_level_distances_3, total_uuid_to_max, edge_loss_baseline, A1_benign, A2_benign, A3_benign, max_A3)
         name = f"{dataset_name}_loss_{loss_fn}_dim_{args.num_hidden}_nhd_{args.num_heads}_nh_{args.mask_rate}_nl_{num_layers}_lr_{lr}_lsf_{lr_f}_mp_{max_epoch}_mpf_{max_epoch_f}_wd_{weight_decay}_wdf_{weight_decay_f}_{encoder_type}_{decoder_type}"
-        os.makedirs('save_middle_results_optc', exist_ok=True)
-        results_path = f'save_middle_results_optc/{name}.pt'
+        os.makedirs('save_middle_results', exist_ok=True)
+        results_path = f'save_middle_results/{name}.pt'
         torch.save(data, results_path)
 
         print(f"\n===== Evaluating with method_12_with_different_normalization (normalization={args.normalization_method}) =====")

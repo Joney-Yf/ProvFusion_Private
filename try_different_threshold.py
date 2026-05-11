@@ -2428,11 +2428,11 @@ if __name__ == '__main__':
     main()
 
 # --- Batch scan example (run manually by editing this block) ---
-# for file in os.listdir('save_middle_results_optc'):
+# for file in os.listdir('save_middle_results'):
 #     if file.endswith('.pt'):
 #         if 'h201' not in file:
 #             continue
-#         filename = os.path.join('save_middle_results_optc', file)
+#         filename = os.path.join('save_middle_results', file)
 #         data = 'optc_h201_merge_edge_normalized.pt'
 #         ground_truth = '../Ground_Truth/ground_truth_nids_optc_h201.pt'
 #         print('============================Processing file:=====================\n', filename)
