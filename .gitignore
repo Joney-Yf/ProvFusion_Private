@@ -1,0 +1,40 @@
+# Data files (too large for git; loaded via --data_path arg)
+*.pt
+*.pth
+*.pkl
+*.npy
+*.npz
+
+# Intermediate results directories
+save_middle_results_optc/
+saved_middle_result*/
+
+# Logs
+*.log
+logs*/
+optc_log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environments
+.env
+.venv/
+venv/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+
+# macOS
+.DS_Store
