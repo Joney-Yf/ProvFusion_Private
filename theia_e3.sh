@@ -85,7 +85,7 @@ do
                                   --data_path $data_path \
                                   --ground_truth_path $ground_truth_path \
                                   --raw_data_dir ../raw_data \
-                                  >> theia_e3_sweep.log \
+                                  >> theia_e3_sweep.log 2>&1
 
                               ((counter++))
                               if [ $((counter % 1)) -eq 0 ]; then
