@@ -1,4 +1,6 @@
 #!/bin/bash
+source ~/anaconda3/etc/profile.d/conda.sh
+conda activate orthrus
 
 # 定义参数数组
 learning_rates=(0.0015 0.00015 0.0001)  # lr 参数的不同取值
