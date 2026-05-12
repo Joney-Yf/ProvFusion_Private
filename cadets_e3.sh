@@ -17,9 +17,8 @@ in_drops=(0.2)                    # in_drop 参数的不同取值
 attn_drops=(0.1)                  # attn_drop 参数的不同取值
 alpha_ls=(3)                  # alpha_l 参数的不同取值
 dataset="CADETS_E3"
-dataset_lower=$(echo "$dataset" | tr '[:upper:]' '[:lower:]')
-data_path="${dataset_lower}_merge_edge_normalized.pt"
-ground_truth_path="../Ground_Truth/ground_truth_nids_${dataset_lower}.pt"
+data_path="cadets_e3.pt"
+ground_truth_path="../Ground_Truth/ground_truth_cadet_v2.pt"
 gpu_ids=(1 1)
 counter=0
 # 循环遍历所有参数组合

@@ -18,10 +18,9 @@ in_drops=(0.2)                  # in_drop 参数的不同取值
 attn_drops=(0.1)                  # attn_drop 参数的不同取值
 alpha_ls=(3)                  # alpha_l 参数的不同取值
 dataset="THEIA_E5"
-dataset_lower=$(echo "$dataset" | tr '[:upper:]' '[:lower:]')
-data_path="${dataset_lower}_merge_edge_normalized.pt"
-ground_truth_path="../Ground_Truth/ground_truth_nids_${dataset_lower}.pt"
-gpu_ids=(0 1)
+data_path="theia_e5_merge_edge_data_final.pt"
+ground_truth_path="../Ground_Truth/ground_truth_nids_theia_e5.pt"
+gpu_ids=(1 1)
 counter=0
 # 循环遍历所有参数组合
 for seed in "${seeds[@]}"
