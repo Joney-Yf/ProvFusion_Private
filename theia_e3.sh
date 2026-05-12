@@ -85,7 +85,7 @@ do
                                   --data_path $data_path \
                                   --ground_truth_path $ground_truth_path \
                                   --raw_data_dir ../raw_data \
-                                  >> logs_theia_change_validation_day/theia_no_edge_merge.log \
+                                  >> theia_e3_sweep.log \
 
                               ((counter++))
                               if [ $((counter % 1)) -eq 0 ]; then
