@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 定义参数数组
-learning_rates=(0.00015 0.0001)  # lr 参数的不同取值
+learning_rates=(0.0015 0.00015 0.0001)  # lr 参数的不同取值
 lr_fs=(0.001 0.01)     # lr 参数的不同取值
 mask_rates=(0.1 0.3 0.5)        # mask_rate 参数的不同取值
 layers=(2)                          # layer 参数的不同取值
@@ -17,9 +17,8 @@ in_drops=(0.2)                    # in_drop 参数的不同取值
 attn_drops=(0.1)                  # attn_drop 参数的不同取值
 alpha_ls=(3)                  # alpha_l 参数的不同取值
 dataset="THEIA_E3"
-dataset_lower=$(echo "$dataset" | tr '[:upper:]' '[:lower:]')
-data_path="${dataset_lower}_merge_edge_normalized.pt"
-ground_truth_path="../Ground_Truth/ground_truth_nids_${dataset_lower}.pt"
+data_path="theia_e3.pt"
+ground_truth_path="../Ground_Truth/ground_truth_nids.pt"
 gpu_ids=(1)
 counter=0
 # 循环遍历所有参数组合
