@@ -1,48 +1,48 @@
 #!/bin/bash
+source ~/anaconda3/etc/profile.d/conda.sh
+conda activate orthrus
 
-# 定义参数数组
-learning_rates=(0.0015)  # lr 参数的不同取值
-lr_fs=(0.0015)  # lr 参数的不同取值
-mask_rates=(0.1 0.3 0.5)        # mask_rate 参数的不同取值
-layers=(2)                          # layer 参数的不同取值
-seeds=(1)                                 # seeds 参数的不同取值
-epochs=(5 50)                                # 训练 epochs
-num_hiddens=(64)                # num_hidden 参数的不同取值
-replace_rates=(0.0)                    # num_decoder_layers 参数的不同取值
-weight_decays=(0.0001 0.001 0.01)  # weight_decay 参数的不同取值
-num_heads=(2 4 8)                         # num_heads 参数的不同取值
-max_epoch_fs=(50)                # max_epoch_f 参数的不同取值
-drop_edge_rates=(0.0)    # drop_edge_rate 参数的不同取值
-in_drops=(0.2)                    # in_drop 参数的不同取值
-attn_drops=(0.1)                  # attn_drop 参数的不同取值
-alpha_ls=(3)                  # alpha_l 参数的不同取值
+learning_rates=(0.0015 0.00015 0.0001)
+lr_fs=(0.001)
+mask_rates=(0.1 0.3 0.5)
+layers=(2)
+seeds=(1)
+epochs=(5)
+num_hiddens=(64 128 256)
+replace_rates=(0.0)
+weight_decays=(0.01 1e-3 1e-4 1e-5)
+num_heads=(2 4 8)
+max_epoch_fs=(50)
+drop_edge_rates=(0.0)
+in_drops=(0.2)
+attn_drops=(0.1)
+alpha_ls=(3)
 dataset="CADETS_E3"
 data_path="cadets_e3.pt"
 ground_truth_path="../Ground_Truth/ground_truth_cadet_v2.pt"
-gpu_ids=(1 1)
 counter=0
-# 循环遍历所有参数组合
-for max_epoch_f in "${max_epoch_fs[@]}"
+
+for seed in "${seeds[@]}"
 do
-  for seed in "${seeds[@]}"
+  for epoch in "${epochs[@]}"
   do
-    for epoch in "${epochs[@]}"
+    for layer in "${layers[@]}"
     do
-      for layer in "${layers[@]}"
+      for lr_f in "${lr_fs[@]}"
       do
-        for lr_f in "${lr_fs[@]}"
+        for lr in "${learning_rates[@]}"
         do
-          for lr in "${learning_rates[@]}"
+          for mask_rate in "${mask_rates[@]}"
           do
-            for mask_rate in "${mask_rates[@]}"
+            for replace_rate in "${replace_rates[@]}"
             do
-              for replace_rate in "${replace_rates[@]}"
+              for num_hidden in "${num_hiddens[@]}"
               do
-                for num_hidden in "${num_hiddens[@]}"
+                for weight_decay in "${weight_decays[@]}"
                 do
-                  for weight_decay in "${weight_decays[@]}"
+                  for num_head in "${num_heads[@]}"
                   do
-                    for num_head in "${num_heads[@]}"
+                    for max_epoch_f in "${max_epoch_fs[@]}"
                     do
                       for drop_edge_rate in "${drop_edge_rates[@]}"
                       do
@@ -52,10 +52,7 @@ do
                           do
                             for alpha_l in "${alpha_ls[@]}"
                             do
-                              device=${gpu_ids[$counter % 2]}
-
-                              # 运行 Python 脚本，替换对应的参数
-                              CUDA_VISIBLE_DEVICES=$device python main_transductive.py \
+                              CUDA_VISIBLE_DEVICES=1 python main_transductive.py \
                                 --device 0 \
                                 --dataset $dataset \
                                 --mask_rate $mask_rate \
@@ -82,14 +79,13 @@ do
                                 --linear_prob \
                                 --scheduler \
                                 --use_cfg \
-                                  --data_path $data_path \
-                                  --ground_truth_path $ground_truth_path \
-                                  --raw_data_dir ../raw_data \
-                                  >> cadets_mimicry_$device.log \
-
+                                --data_path $data_path \
+                                --ground_truth_path $ground_truth_path \
+                                --raw_data_dir ../raw_data \
+                                >> cadets_e3_sweep.log 2>&1
 
                               ((counter++))
-                              if [ $((counter % 2)) -eq 0 ]; then
+                              if [ $((counter % 1)) -eq 0 ]; then
                                 wait
                               fi
 
