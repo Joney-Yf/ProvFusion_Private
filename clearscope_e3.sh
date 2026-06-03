@@ -52,6 +52,13 @@ do
                           do
                             for alpha_l in "${alpha_ls[@]}"
                             do
+                              result_name=$(python3 -c "print('CLEARSCOPE_E3_loss_sce_dim_${num_hidden}_nhd_${num_head}_nh_${mask_rate}_nl_${layer}_lr_' + str(float('${lr}')) + '_lsf_' + str(float('${lr_f}')) + '_mp_${epoch}_mpf_${max_epoch_f}_wd_' + str(float('${weight_decay}')) + '_wdf_0.0001_gatedge_gat')")
+                              if [ -f "save_middle_results/${result_name}.pt" ]; then
+                                echo "Skipping ${result_name} (already exists)"
+                                ((counter++))
+                                continue
+                              fi
+
                               CUDA_VISIBLE_DEVICES=1 python main_transductive.py \
                                 --device 0 \
                                 --dataset $dataset \
