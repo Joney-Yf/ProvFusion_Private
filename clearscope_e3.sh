@@ -20,6 +20,7 @@ alpha_ls=(3)
 dataset="CLEARSCOPE_E3"
 data_path="clearscope_e3_merge_edge_data.pt"
 ground_truth_path="../Ground_Truth/ground_truth_nids_clearscope.pt"
+gpu_ids=(0 1)
 counter=0
 
 for seed in "${seeds[@]}"
@@ -59,7 +60,8 @@ do
                                 continue
                               fi
 
-                              CUDA_VISIBLE_DEVICES=1 python main_transductive.py \
+                              device=${gpu_ids[$counter % 2]}
+                              CUDA_VISIBLE_DEVICES=$device python main_transductive.py \
                                 --device 0 \
                                 --dataset $dataset \
                                 --mask_rate $mask_rate \
@@ -89,10 +91,10 @@ do
                                 --data_path $data_path \
                                 --ground_truth_path $ground_truth_path \
                                 --raw_data_dir ../raw_data \
-                                >> clearscope_e3_sweep.log 2>&1
+                                >> clearscope_e3_sweep.log 2>&1 &
 
                               ((counter++))
-                              if [ $((counter % 1)) -eq 0 ]; then
+                              if [ $((counter % 2)) -eq 0 ]; then
                                 wait
                               fi
 
