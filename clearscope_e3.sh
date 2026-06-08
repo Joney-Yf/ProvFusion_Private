@@ -4,15 +4,15 @@ conda activate orthrus
 
 learning_rates=(0.0015 0.00015 0.0001)
 lr_fs=(0.001)
-mask_rates=(0.1 0.3 0.5)
+mask_rates=(0.1 0.3)
 layers=(2)
 seeds=(1)
-epochs=(5 200)
-num_hiddens=(64 128 256)
+epochs=(200)
+num_hiddens=(64 128)
 replace_rates=(0.0)
-weight_decays=(0.01 1e-3 1e-4 1e-5)
-num_heads=(2 4 8)
-max_epoch_fs=(50)
+weight_decays=(0.01 1e-3 1e-4)
+num_heads=(2 4)
+max_epoch_fs=(50 100 200)
 drop_edge_rates=(0.0)
 in_drops=(0.2)
 attn_drops=(0.1)
@@ -54,7 +54,7 @@ do
                             do
                               result_name=$(python3 -c "print('CLEARSCOPE_E3_loss_sce_dim_${num_hidden}_nhd_${num_head}_nh_${mask_rate}_nl_${layer}_lr_' + str(float('${lr}')) + '_lsf_' + str(float('${lr_f}')) + '_mp_${epoch}_mpf_${max_epoch_f}_wd_' + str(float('${weight_decay}')) + '_wdf_0.0001_gatedge_gat')")
                               if [ -f "save_middle_results/${result_name}.pt" ]; then
-                                echo "Skipping ${result_name} (already exists)"
+                                echo "Skipping ${result_name}"
                                 ((counter++))
                                 continue
                               fi
