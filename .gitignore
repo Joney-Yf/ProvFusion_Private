@@ -9,6 +9,14 @@
 save_middle_results_optc/
 saved_middle_result*/
 
+# Data-preparation intermediate artifacts (nx graphs have no extension;
+# word2vec models / *.TemporalData.simple don't match the patterns above)
+data_preparation/artifacts/
+
+# Vendored upstream PIDSMaker/Orthrus repo (12GB, has its own .git;
+# data_preparation/ is the migrated, self-contained copy actually used)
+orthrus_for_data_prepration/
+
 # Logs
 *.log
 logs*/
