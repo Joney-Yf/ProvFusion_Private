@@ -44,9 +44,24 @@ PYTHONHASHSEED=0 python data_preparation/prepare_data.py CLEARSCOPE_E3
 # Resume from a later stage (e.g. DB already built):
 PYTHONHASHSEED=0 python data_preparation/prepare_data.py CLEARSCOPE_E3 --run_from graphs
 
+# Run a SINGLE stage (step-by-step verification): e.g. only create_db
+PYTHONHASHSEED=0 python data_preparation/prepare_data.py CLEARSCOPE_E3 \
+    --run_from create_db --run_to create_db
+
 # Override any orthrus.yml param via the original dotted CLI syntax:
 PYTHONHASHSEED=0 python data_preparation/prepare_data.py CLEARSCOPE_E3 \
     --graph_construction.build_graphs.time_window_size=1.0
+
+# Validate WITHOUT touching the original DB or the original dataset folder (dev):
+data_preparation/postgres/init-create-databases.sh _Test_for_OpenSource   # build the isolated DB first
+PYTHONHASHSEED=0 python data_preparation/prepare_data.py CLEARSCOPE_E3 \
+    --out_suffix _Test_for_OpenSource --raw_data_dir ../raw_data_opensource
+# -> ingests into DB clearscope_e3_test_for_opensource (original DB untouched)
+#    publishes ../raw_data_opensource/CLEARSCOPE_E3 (folder name kept; original untouched)
+# then train with the SAME dataset name (configs.yml / DATASET_WEIGHTS keep matching):
+#   python main_transductive.py --dataset CLEARSCOPE_E3 \
+#       --raw_data_dir ../raw_data_opensource --data_path clearscope_e3_opensource.pt ...
+# Drop --out_suffix / --raw_data_dir (defaults) for the clean release run on originals.
 ```
 
 Flags added by this package (everything else is the original config parser):
@@ -54,9 +69,11 @@ Flags added by this package (everything else is the original config parser):
 | flag | default | meaning |
 |------|---------|---------|
 | `--run_from {create_db,graphs,featurization,embed}` | `create_db` | first stage to run (resume support) |
-| `--raw_data_dir PATH` | `../raw_data` | where to publish the dataset (matches the trainer's loader) |
-| `--publish_mode {symlink,copy,none}` | `symlink` | how to expose `edge_embeds` as `../raw_data/{DATASET}` |
-| `--force_publish` | off | allow publish to delete an existing **real** (non-symlink) `../raw_data/{DATASET}` |
+| `--run_to {create_db,graphs,featurization,embed}` | `embed` | last stage to run, inclusive. `--run_from X --run_to X` runs a single stage; publish runs only when `embed` is included |
+| `--out_suffix STR` | `""` | **database** isolation suffix: appended (lowercased) to the Postgres DB names so all stages hit a separate DB and the original is never ingested into. Does **not** rename the published folder (keeps `--dataset` NAME valid for configs.yml/weights). Empty = original DB names |
+| `--raw_data_dir PATH` | `../raw_data` | where to publish the dataset (matches the trainer's loader). Point at a separate parent dir to isolate the published **data** without renaming the folder |
+| `--publish_mode {symlink,copy,none}` | `symlink` | how to expose `edge_embeds` as `{raw_data_dir}/{DATASET}` |
+| `--force_publish` | off | allow publish to delete an existing **real** (non-symlink) `{raw_data_dir}/{DATASET}` |
 
 Unknown arguments (e.g. a typo'd dotted override) abort with an error, same as the
 original `orthrus.py` entry point.
@@ -70,9 +87,11 @@ original `orthrus.py` entry point.
    (host=localhost, user=postgres, password=`yangfan`, port=5432).
 2. **Schema created.** The stage-1 scripts `INSERT` into pre-existing tables; they do **not**
    create them. Create the databases + tables first using the vendored
-   `postgres/init-create-databases.sh` (the full-schema variant — `init-create-empty-databases.sh`
-   only creates empty databases). It builds `event_table`, `file_node_table`,
-   `netflow_node_table`, `subject_node_table` for each dataset.
+   `postgres/init-create-databases.sh [out_suffix]` (the full-schema variant —
+   `init-create-empty-databases.sh` only creates empty databases). It builds `event_table`,
+   `file_node_table`, `netflow_node_table`, `subject_node_table` for each dataset. Pass the
+   same string you give `--out_suffix` to build isolated DBs (e.g.
+   `init-create-databases.sh _Test_for_OpenSource`) instead of the originals.
 3. **Raw JSON logs** present at the `raw_dir` path baked into `DATASET_DEFAULT_CONFIG` in
    `config.py` (per-dataset, server-specific). Adjust `raw_dir` there if your paths differ.
 4. **Empty database.** Stage 1 aborts if any of the four tables already contains rows:
@@ -102,6 +121,28 @@ original `orthrus.py` entry point.
   for future cleanup.
 - The vendored `orthrus.yml` still contains `detection` / `attack_reconstruction` sections
   (the config validator requires them), but those stages are never imported or run here.
+
+## Keeping the originals safe (DB vs data are isolated separately)
+
+The pipeline starts (stage 1) by **ingesting into Postgres**, and by default targets the
+original database name (`clearscope_e3`, …) and publishes to the original
+`../raw_data/{DATASET}`. No code path drops/recreates/truncates anything — stage 1 only
+`INSERT`s, and the guards below refuse to clobber a populated DB or a real dataset folder —
+but the *names* it touches are the originals. Two independent knobs isolate the two risks:
+
+- **Database → `--out_suffix`.** Appended (lowercased) to the Postgres DB names so every
+  stage reads/writes a separate DB (`clearscope_e3_<suffix>`); the original DB is never
+  ingested into. It deliberately does **not** rename the published dataset folder.
+- **Published data → `--raw_data_dir`.** The folder name stays `cfg.dataset.name` (e.g.
+  `CLEARSCOPE_E3`) on purpose: training keys `configs.yml` best-configs and `DATASET_WEIGHTS`
+  by the `--dataset` NAME, so renaming the folder would force a new name and break those
+  lookups. To avoid clobbering the original `../raw_data/{DATASET}`, publish into a separate
+  parent dir (`--raw_data_dir ../raw_data_opensource`) — same folder name, new location —
+  then train with the **unchanged** `--dataset CLEARSCOPE_E3` plus a fresh `--data_path`.
+- Intermediate artifacts already live under `data_preparation/artifacts/` (keyed by dataset
+  *name* + config hash, independent of the DB name), so they never collide regardless.
+- Recommended for validation; for the release run omit both (defaults) to produce the clean
+  original DB name + original `../raw_data/{DATASET}`.
 
 ## Publishing safety / re-run gotchas
 

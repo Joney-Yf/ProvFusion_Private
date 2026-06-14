@@ -1,13 +1,21 @@
 #!/bin/bash
 set -e  # Exit on any error
 
-echo "Starting database and table creation..."
+# Optional isolation suffix (matches `prepare_data.py --out_suffix`). When given, this
+# creates suffixed copies (e.g. clearscope_e3_test_for_opensource) instead of touching the
+# originals, so you can validate the pipeline without overwriting existing databases.
+#   ./init-create-databases.sh                       # original names
+#   ./init-create-databases.sh _Test_for_OpenSource  # suffixed, isolated names
+SUFFIX="${1:-}"
+
+echo "Starting database and table creation (suffix='${SUFFIX}')..."
 
 # Loop over datasets
 for dataset in clearscope_e3 cadets_e3 theia_e3 clearscope_e5 cadets_e5 theia_e5
 do
-    # Convert dataset name to lowercase
-    DATASET_NAME=$(echo "$dataset" | tr '[:upper:]' '[:lower:]')
+    # Append the suffix, then lowercase (unquoted CREATE DATABASE folds to lowercase; this
+    # must match the lowercased name prepare_data.py connects with).
+    DATASET_NAME=$(echo "${dataset}${SUFFIX}" | tr '[:upper:]' '[:lower:]')
     echo "Creating database and tables for: $DATASET_NAME"
 
     # PostgreSQL commands
