@@ -11,7 +11,7 @@ graph auto-encoder with multi-view anomaly voting. Evaluated on DARPA Transparen
 | THEIA_E3 | 91 | 2 | released checkpoint / retrain (Options A/B/C) |
 | CADETS_E3 | 24 | 1 | released checkpoint / retrain (Options A/B/C) |
 | CLEARSCOPE_E3 | 6 | 7 | released checkpoint / retrain (Options A/B/C) |
-| CLEARSCOPE_E3 (full pipeline, regenerated from raw logs) | 6–7 | best draws ≤ 16 | end-to-end (Option D, stochastic — see below) |
+| CLEARSCOPE_E3 (full pipeline, regenerated from raw logs) | 6 | 7 | released checkpoint / end-to-end (Option D) |
 
 TP/FP are unique attack/benign nodes flagged by the final voting detector
 (`method_12_with_different_normalization`, `percentile` normalization).
@@ -62,7 +62,10 @@ release_assets/
 │   ├── THEIA_E3_..._gatedge_gat_data.pt                  # TP=91 / FP=2
 │   ├── CADETS_E3_loss_sce_dim_64_..._gat_data.pt         # TP=24 / FP=1
 │   ├── CLEARSCOPE_E3_loss_sce_dim_64_..._gat_data.pt     # TP=6  / FP=7
-│   └── CLEARSCOPE_E3_RERUN_4.pt                          # TP=6  / FP=4 (retrained in this repo)
+│   ├── CLEARSCOPE_E3_RERUN_4.pt                          # TP=6  / FP=4 (retrained in this repo)
+│   ├── CLEARSCOPE_E3_regen_emb25_..._tp6_fp7.pt          # TP=6  / FP=7 (Option-D regenerated data)
+│   ├── CLEARSCOPE_E3_regen_emb25_..._tp6_fp9.pt          # TP=6  / FP=9 (Option-D regenerated data)
+│   └── CLEARSCOPE_E3_regen_emb25_..._tp7_fp16.pt         # TP=7  / FP=16 (Option-D regenerated data)
 ├── regenerated_data/
 │   └── clearscope_e3_emb25.pt      # merged training input regenerated from raw logs (Option D)
 └── MANIFEST.md5
@@ -112,6 +115,12 @@ method_12_with_different_normalization(
 Swap the checkpoint/data/ground-truth triple per the tables above to reproduce each row
 of the results table exactly.
 
+> **Checkpoint naming matters:** evaluation derives the dataset from the **first two
+> underscore-separated tokens of the checkpoint filename** (e.g. `CLEARSCOPE_E3_*.pt` →
+> loads `CLEARSCOPE_E3_attack_to_nids.pt` from the working directory). If you rename a
+> checkpoint, keep the `{DATASET}_` prefix — otherwise the attack attribution silently
+> fails and the reported TP collapses.
+
 ### Option B — retrain from the released merged `.pt`
 
 ```bash
@@ -156,9 +165,10 @@ flags, and safety guards). Validated end-to-end on CLEARSCOPE_E3: the regenerate
 is bit-identical to the original (node `index_id` md5 match, so the released ground truth
 remains valid), and the regenerated embeddings are structurally identical to the originals.
 Training on the regenerated data with the Option-D config in Section 3 detects **all six
-labeled attack nodes**; the false-positive count is draw-dependent (see "On randomness") —
-across our reruns the best draws reached `TP=7/FP=16` and `TP=6/FP≤10`-level results, i.e.
-the same ballpark as the original-data baseline.
+labeled attack nodes** and, on the best draws, matches the original-data baseline exactly:
+the released Option-D checkpoints re-evaluate to **TP=6/FP=7**, TP=6/FP=9 and TP=7/FP=16
+(see the release tree in Section 2; the FP count is draw-dependent across reruns, see
+"On randomness").
 
 ```bash
 # 1) regenerate data from raw logs (Postgres required; see data_preparation/README.md)
