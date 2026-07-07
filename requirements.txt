@@ -1,0 +1,45 @@
+# OpenProvFusion — pinned to the exact environment used for all reported results.
+# Python 3.9 (tested: 3.9.21), CUDA 11.x GPU required for training.
+#
+# Install order matters for the CUDA-specific wheels:
+#   1) torch first (official index for your CUDA version),
+#   2) dgl (CUDA build),
+#   3) PyG + extensions (wheels matching your torch/CUDA),
+#   4) the rest.
+#
+# Reference commands (CUDA 11.3/11.7, as used on our server):
+#   pip install torch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1
+#   pip install dgl==1.0.0 -f https://data.dgl.ai/wheels/cu113/repo.html
+#   pip install torch_geometric==2.5.3
+#   pip install torch-cluster torch-sparse torch-spline-conv \
+#       -f https://data.pyg.org/whl/torch-1.13.1+cu117.html
+#   pip install -r requirements.txt
+
+torch==1.13.1
+torchvision==0.14.1
+torchaudio==0.13.1
+dgl==1.0.0
+torch_geometric==2.5.3
+torch-cluster==1.6.1
+torch-sparse==0.6.17
+torch-spline-conv==1.2.2
+
+numpy==1.26.0
+scipy==1.10.1
+scikit-learn==1.2.0
+pandas==2.2.2
+networkx==2.8.7
+matplotlib==3.8.4
+tqdm==4.67.1
+PyYAML==6.0.2
+yacs==0.1.8
+tensorboardX==2.6.2.2
+pytz==2024.1
+xxhash==3.2.0
+
+# Data-preparation pipeline only (raw DARPA logs -> embeddings; not needed for training-only use)
+gensim==4.3.1
+psycopg2==2.9.9
+nltk==3.8.1
+igraph==0.11.5
+PyMetis==2023.1.1

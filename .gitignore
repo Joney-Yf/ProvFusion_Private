@@ -4,6 +4,8 @@
 *.pkl
 *.npy
 *.npz
+# ... except the tiny per-dataset attack->nids maps required by evaluation (~1 KB each)
+!*_attack_to_nids.pt
 
 # Intermediate results directories
 save_middle_results_optc/
