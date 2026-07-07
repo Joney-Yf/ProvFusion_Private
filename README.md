@@ -9,9 +9,9 @@ graph auto-encoder with multi-view anomaly voting. Evaluated on DARPA Transparen
 | Dataset | TP | FP | Reproduction entry |
 |---|---|---|---|
 | THEIA_E3 | 91 | 2 | released checkpoint / retrain (Options A/B/C) |
-| CADETS_E3 | 24 | 1 | released checkpoint / retrain (Options A/B) |
+| CADETS_E3 | 24 | 1 | released checkpoint / retrain (Options A/B/C) |
 | CLEARSCOPE_E3 | 6 | 7 | released checkpoint / retrain (Options A/B/C) |
-| CLEARSCOPE_E3 (full pipeline, regenerated from raw logs) | 7 | 16 | end-to-end (Option D) |
+| CLEARSCOPE_E3 (full pipeline, regenerated from raw logs) | 6–7 | best draws ≤ 16 | end-to-end (Option D, stochastic — see below) |
 
 TP/FP are unique attack/benign nodes flagged by the final voting detector
 (`method_12_with_different_normalization`, `percentile` normalization).
@@ -58,12 +58,11 @@ created automatically on first run and reused afterwards):
 
 ```
 release_assets/
-├── checkpoints/          # saved middle results that evaluate to the reported numbers
+├── checkpoints/          # saved middle results; each re-evaluates to exactly these numbers
 │   ├── THEIA_E3_..._gatedge_gat_data.pt                  # TP=91 / FP=2
 │   ├── CADETS_E3_loss_sce_dim_64_..._gat_data.pt         # TP=24 / FP=1
 │   ├── CLEARSCOPE_E3_loss_sce_dim_64_..._gat_data.pt     # TP=6  / FP=7
-│   ├── CLEARSCOPE_E3_RERUN_4.pt                          # TP=6  / FP=4 (retrained in this repo)
-│   └── emb25_lr0.003_wd0.001_wdf0_e100_h4_r9_tp7_fp16.pt # TP=7  / FP=16 (full-pipeline data)
+│   └── CLEARSCOPE_E3_RERUN_4.pt                          # TP=6  / FP=4 (retrained in this repo)
 ├── regenerated_data/
 │   └── clearscope_e3_emb25.pt      # merged training input regenerated from raw logs (Option D)
 └── MANIFEST.md5
@@ -155,9 +154,11 @@ Postgres ingestion → per-day graphs → Word2Vec featurization → edge embedd
 as `../raw_data/{DATASET}` (see `data_preparation/README.md` for prerequisites, isolation
 flags, and safety guards). Validated end-to-end on CLEARSCOPE_E3: the regenerated database
 is bit-identical to the original (node `index_id` md5 match, so the released ground truth
-remains valid), and training on the regenerated data with the Option-D config in Section 3
-reaches **TP=7 / FP=16** (all six labeled attack nodes plus one, checkpoint released;
-`TP=6 / FP=25` draw also released).
+remains valid), and the regenerated embeddings are structurally identical to the originals.
+Training on the regenerated data with the Option-D config in Section 3 detects **all six
+labeled attack nodes**; the false-positive count is draw-dependent (see "On randomness") —
+across our reruns the best draws reached `TP=7/FP=16` and `TP=6/FP≤10`-level results, i.e.
+the same ballpark as the original-data baseline.
 
 ```bash
 # 1) regenerate data from raw logs (Postgres required; see data_preparation/README.md)
