@@ -165,7 +165,9 @@ DATASET_DEFAULT_CONFIG = {
           ]
      },
      "THEIA_E3": {
-          "raw_dir": "/data/",  # NOTE: /path/to/json/files/
+          # MIGRATION: vendored value was "/data/" (stale path from the upstream authors'
+          # machine); fixed to the actual THEIA E3 JSON location on our server.
+          "raw_dir": "/home/original-home/raid-disk/yangfan/sbustreamspot-data/darpa3/theia/json_file",  # NOTE: /path/to/json/files/
           "database": "theia_e3",
           "database_all_file": "theia_e3",
           "num_node_types": 3,
