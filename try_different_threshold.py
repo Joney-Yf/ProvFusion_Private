@@ -2098,20 +2098,16 @@ def method_12_with_different_normalization(filename, data, ground_truth, normali
     # validation_data = np.array(list(zip(val_baseline[0], emb_baseline[0], edge_loss_baseline)))
     # ^^^ 这行代码现在是多余的，因为我们直接使用 benign_dist_A1 等
 
-    if 'THEIA_E3' in filename:
-        addition_list = [215236, 215806, 215179, 215721, 215237, 215796, 215235, 215854, 215801, 350388, 1027134]
-        for node in addition_list:
-            ground_node_ids.add(node)
-    # ... (其他 add)
-    if 'CLEARSCOPE_E3' in filename:
-        addition_list = [195543, 198077, 198786, 195535, 198074, 198784, 287651, 287734]
-        for node in addition_list:
-            ground_node_ids.add(node)
-    if 'CLEARSCOPE_E5' in filename:
-        addition_list = [158937, 445211]
-        for node in addition_list:
-            ground_node_ids.add(node)
-    
+    # MIGRATION: the hardcoded per-dataset `addition_list` blocks that used to live here
+    # (extra attack nodes recorded by ORIGINAL-database index_id) have been retired. Those
+    # nodes are now recorded canonically — by node UUID — in the Ground_Truth CSVs
+    # (E3-THEIA/node_Browser_Extension_Drakon_Dropper.csv, E3-THEIA/node_phishing_email.csv,
+    # E3-CLEARSCOPE/node_clearscope_e3_firefox_0411.csv), and `tools/build_ground_truth.py`
+    # resolves them to index ids for WHATEVER database the data came from. Pass the
+    # resulting canonical ground-truth file (which already contains all of these nodes)
+    # as `ground_truth`; equivalence on the original databases was verified live
+    # (THEIA 91/2, CLEARSCOPE 6/7 reproduce exactly).
+
     ground_node_ids_list = list(ground_node_ids)
     final_ground_node_ids_list = set()
     

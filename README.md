@@ -46,9 +46,20 @@ created automatically on first run and reused afterwards):
 
 | Dataset | --data_path | --ground_truth_path |
 |---|---|---|
-| THEIA_E3 | theia_merge_edge_data.pt | ../Ground_Truth/ground_truth_nids.pt |
+| THEIA_E3 | theia_merge_edge_data.pt | gt_canonical/THEIA_E3_orig_ground_truth_nids.pt |
 | CADETS_E3 | cadets_e3.pt | ../Ground_Truth/ground_truth_cadet_v2.pt |
-| CLEARSCOPE_E3 | clearscope_e3_merge_edge_data.pt | ../Ground_Truth/ground_truth_nids_clearscope.pt |
+| CLEARSCOPE_E3 | clearscope_e3_merge_edge_data.pt | gt_canonical/CLEARSCOPE_E3_orig_ground_truth_nids.pt |
+
+**Canonical ground truth.** Attack nodes are recorded by **node UUID** in
+`Ground_Truth_csv/` (one CSV per attack; THEIA's third attack — phishing e-mail with
+executable attachment — lives in `node_phishing_email.csv`). `tools/build_ground_truth.py`
+resolves those UUIDs against a given Postgres database and emits the index-based
+`*_ground_truth_nids.pt` + `*_attack_to_nids.pt` consumed by evaluation (`gt_canonical/`
+ships prebuilt artifacts for the original databases). This makes ground truth independent
+of database ingestion order: if you regenerate a database from raw logs (Option D), rebuild
+the ground-truth artifacts for it with the same script instead of reusing the originals.
+Equivalence with the historical labels was verified live (THEIA 91/2, CLEARSCOPE 6/7
+reproduce exactly; the retired hardcoded `addition_list` nodes are all included).
 | THEIA_E5 | theia_e5_merge_edge_data_final.pt | ../Ground_Truth/ground_truth_nids_theia_e5.pt |
 | CADETS_E5 | cadets_e5_merge_edge_data.pt | ../Ground_Truth/ground_truth_nids_cadets_e5.pt |
 | CLEARSCOPE_E5 | clearscope_e5_merge_edge_data.pt | ../Ground_Truth/ground_truth_nids_clearscope_e5.pt |

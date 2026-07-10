@@ -6,6 +6,8 @@
 *.npz
 # ... except the tiny per-dataset attack->nids maps required by evaluation (~1 KB each)
 !*_attack_to_nids.pt
+# ... and the canonical ground-truth artifacts built from the UUID CSVs (~1 KB each)
+!gt_canonical/*.pt
 
 # Intermediate results directories
 save_middle_results_optc/
