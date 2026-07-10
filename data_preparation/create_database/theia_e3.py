@@ -1,3 +1,11 @@
+# MIGRATION (2026-07-10): this file is the guard/src variant of the THEIA E3 ingester --
+# the parser that ACTUALLY produced the original `theia_e3` database (evidence: the original
+# DB carries its subject-parsing signatures -- tgid-anchored regex capturing kernel-thread
+# names like "kthreadd", and the string "null" path fallback; the previously vendored
+# orthrus variant produced 1,163 differing subject rows). Vendored verbatim from
+# ~/guard/src/create_database/theia_e3.py so regenerated THEIA databases are byte-faithful
+# to the original. Remaining regen-vs-original differences are order-dependent multi-valued
+# attributes only (same-UUID nodes whose recorded path depends on log processing order).
 import os
 import re
 import torch
@@ -68,26 +76,27 @@ def store_subject(file_path, cur, connect, index_id, filelist):
         with open(os.path.join(file_path, file), "r") as f:
             for line in (f):
                 if "schema.avro.cdm18.Subject" in line:
-                    subject_uuid = re.findall(
-                        'avro.cdm18.Subject":{"uuid":"(.*?)",', line)
-                    node_uuid = subject_uuid[0]
+                    res=re.findall('Subject":{"uuid":"(.*?)"(.*?)"cmdLine":{"string":"(.*?)"}(.*?)"properties":{"map":{"tgid":"(.*?)"',line)[0]
+                    try:
+                        path_str=re.findall('"path":"(.*?)"',line)[0] 
+                        path=path_str
+                    except:
+                        path="null"
+                    nodeid=res[0]
+                    cmdLine=res[2]
+                    tgid=res[4]
 
-                    subject_path = re.findall(
-                        '"properties":{(.*?)"path":"(.*?)","ppid"', line
-                    )
-                    if len(subject_path) == 0:
-                        node_path = None
-                    else:
-                        node_path = subject_path[0][1]
-
-                    subject_cmd = re.findall(
-                        ',"cmdLine":{"string":"(.*?)"},', line
-                    )
-                    if len(subject_cmd) == 0:
+                    # subject_uuid = re.findall(
+                    #     'avro.cdm18.Subject":{"uuid":"(.*?)",(.*?)"path":"(.*?)"', line)
+                    node_uuid = res[0]
+                    node_path = path
+                    # subject_cmd = re.findall(
+                    #     ',"cmdLine":{"string":"(.*?)"},', line
+                    # )
+                    if len(cmdLine) == 0:
                         node_cmd = None
                     else:
-                        node_cmd = subject_cmd[0]
-
+                        node_cmd = cmdLine
                     subject_obj2hash[node_uuid] = [node_path, node_cmd]
 
     # Store into database
@@ -116,14 +125,17 @@ def store_file(file_path, cur, connect, index_id, filelist):
         with open(os.path.join(file_path, file), "r") as f:
             for line in f:
                 if "avro.cdm18.FileObject" in line:
-                    Object_uuid = re.findall('avro.cdm18.FileObject":{"uuid":"(.*?)",(.*?)"filename":"(.*?)"', line)
+                    # Object_uuid = re.findall('avro.cdm18.FileObject":{"uuid":"(.*?)",(.*?)"path":"(.*?)"', line)
                     try:
-                        file_obj2hash[Object_uuid[0][0]] = Object_uuid[0][-1]
+                        res=re.findall('FileObject":{"uuid":"(.*?)"(.*?)"filename":"(.*?)"',line)[0]
+                        nodeid=res[0]
+                        filepath=res[2]
+                        file_obj2hash[nodeid] = filepath
                     except:
                         fail_count += 1
 
     datalist = []
-
+    print('total file failed number is:', fail_count)
     for i in file_obj2hash.keys():
         if len(i) != 64:
             datalist.append([i] + [stringtomd5(i), file_obj2hash[i]] + [index_id])
