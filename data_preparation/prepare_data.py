@@ -321,6 +321,30 @@ def main(cfg, prep_args):
         run_create_database(cfg)
         times["create_db"] = round(time.time() - t, 2)
 
+        # Canonical labels: ground truth is keyed by node UUID (Ground_Truth_csv/); the
+        # index-based artifacts consumed by evaluation are DERIVED from the freshly
+        # ingested database, so label indices always match THIS database's numbering
+        # (ingestion order differences can never invalidate them).
+        if not prep_args.skip_build_gt:
+            repo_root = os.path.dirname(_THIS_DIR)
+            builder = os.path.join(repo_root, "tools", "build_ground_truth.py")
+            tag = "regen" if prep_args.out_suffix else "orig"
+            out_prefix = os.path.join(repo_root, "gt_canonical", f"{cfg.dataset.name}_{tag}")
+            import subprocess
+            r = subprocess.run(
+                [sys.executable, builder, cfg.dataset.name, cfg.dataset.database, out_prefix],
+                capture_output=True, text=True, cwd=repo_root,
+            )
+            for ln in (r.stdout + r.stderr).strip().splitlines():
+                log(f"[build_gt] {ln}")
+            if r.returncode != 0:
+                if "KeyError" in r.stderr:
+                    log(f"[build_gt] dataset {cfg.dataset.name} has no canonical CSV spec — skipped")
+                else:
+                    raise RuntimeError("build_ground_truth failed; see [build_gt] log lines above")
+            else:
+                log(f"[build_gt] labels for database '{cfg.dataset.database}' -> {out_prefix}_*.pt")
+
     t = time.time()
     if _selected("graphs"):
         log("=" * 60)
@@ -398,6 +422,11 @@ def parse_args(argv=None):
              "isolate the published DATA with --raw_data_dir instead. Default empty = "
              "original DB names. Create the matching DB first with "
              "postgres/init-create-databases.sh {out_suffix}.",
+    )
+    prep_parser.add_argument(
+        "--skip_build_gt", action="store_true",
+        help="Skip the automatic post-ingest generation of canonical ground-truth "
+             "artifacts (tools/build_ground_truth.py) for the ingested database.",
     )
     prep_parser.add_argument(
         "--force_publish", action="store_true",
