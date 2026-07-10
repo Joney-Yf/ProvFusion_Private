@@ -59,12 +59,12 @@ B73501B6-0200-0000-0000-000000000020,{'subject': '/etc/firefox/native-messaging-
 BC353DB6-0200-0000-0000-000000000020,{'subject': '/etc/firefox/native-messaging-hosts/gtcache ./gtcache'},216317
 BD353EB6-0200-0000-0000-000000000020,{'subject': '/etc/firefox/native-messaging-hosts/gtcache ./gtcache'},216318
 3A3530B4-0200-0000-0000-000000000020,{'subject': '/home/admin/Downloads/firefox/firefox /usr/bin/firefox'},216191
-ED35A9B7-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215236
-273847BC-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215806
-D237D6BA-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215721
-EE35ABB7-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215237
-1D38E3BB-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215796
 EC3598B7-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215235
-54387BBE-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215854
-223838BC-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215801
+ED35A9B7-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215236
+EE35ABB7-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215237
 D037D3BA-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215719
+D237D6BA-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215721
+1D38E3BB-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215796
+223838BC-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215801
+273847BC-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215806
+54387BBE-0200-0000-0000-000000000020,{'subject': '/home/admin/profile (deleted) /home/admin/profile'},215854
