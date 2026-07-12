@@ -12,6 +12,7 @@ graph auto-encoder with multi-view anomaly voting. Evaluated on DARPA Transparen
 | CADETS_E3 | 24 | 1 | released checkpoint / retrain (Options A/B/C) |
 | CLEARSCOPE_E3 | 6 | 7 | released checkpoint / retrain (Options A/B/C) |
 | CLEARSCOPE_E3 (full pipeline, regenerated from raw logs) | 7 | 7 | released checkpoint / end-to-end (Option D) |
+| THEIA_E3 (full pipeline, regenerated from raw logs) | 99 | 3 | released checkpoint / end-to-end (Option D) |
 
 TP/FP are unique attack/benign nodes flagged by the final voting detector
 (`method_12_with_different_normalization`, `percentile` normalization).
@@ -74,6 +75,8 @@ release_assets/
 │   ├── CADETS_E3_loss_sce_dim_64_..._gat_data.pt         # TP=24 / FP=1
 │   ├── CLEARSCOPE_E3_loss_sce_dim_64_..._gat_data.pt     # TP=6  / FP=7
 │   ├── CLEARSCOPE_E3_RERUN_4.pt                          # TP=6  / FP=4 (retrained in this repo)
+│   ├── THEIA_E3_regen_d64_..._tp99_fp3.pt                # TP=99 / FP=3 (Option-D regenerated data)
+│   ├── THEIA_E3_regen_d64_..._tp88_fp2.pt                # TP=88 / FP=2 (Option-D, FP matches baseline)
 │   ├── CLEARSCOPE_E3_regen_emb25_..._tp7_fp7.pt          # TP=7  / FP=7 (Option-D regenerated data)
 │   ├── CLEARSCOPE_E3_regen_emb25_..._tp6_fp7.pt          # TP=6  / FP=7 (Option-D regenerated data)
 │   ├── CLEARSCOPE_E3_regen_emb25_..._tp6_fp9.pt          # TP=6  / FP=9 (Option-D regenerated data)
@@ -95,6 +98,7 @@ All runs: `--encoder gatedge --decoder gat --loss_fn sce --optimizer adam --num_
 | CADETS_E3 | 64 | 2 | 0.3 | 0.0015 | 5 | 50 | 0.001 | 0.0001 |
 | CLEARSCOPE_E3 | 64 | 4 | 0.1 | 0.0015 | 200 | 50 | 0.001 | 0.0001 |
 | CLEARSCOPE_E3 (regenerated data, Option D) | 64 | 4 | 0.1 | 0.003 | 100 | 50 | 0.001 | 0 |
+| THEIA_E3 (regenerated data, Option D) | 64 | 8 | 0.3 | 0.0015 | 20 | 50 | 0.001 | 1e-5 |
 
 ¹ Not recorded in the THEIA artifact name; the sweep that produced it covered
 `num_hidden ∈ {64, 128, 256}` (`theia_e3.sh`) — use the released checkpoint (Option A) for
@@ -200,6 +204,18 @@ CUDA_VISIBLE_DEVICES=0 python main_transductive.py --device 0 \
   --loss_fn sce --optimizer adam --alpha_l 3 --replace_rate 0.0 --activation prelu \
   --linear_prob --scheduler --use_cfg --seeds 1 --normalization_method percentile
 ```
+
+**THEIA_E3 (Option D).** Same four stages; validated end-to-end. Two points specific to it:
+(a) its ingester is the `guard/src` variant of `create_database/theia_e3.py` — the parser that
+actually produced the original database (already vendored); (b) the regenerated database
+assigns **different `index_id` numbering** than the original (the raw-log directory's entry
+order changed at some point, and file enumeration is `glob`-order), so you MUST use the labels
+built for the regenerated database — `prepare_data.py` does this automatically after ingest
+(`gt_canonical/THEIA_E3_regen_*`), and evaluation must run from a directory whose
+`THEIA_E3_attack_to_nids.pt` points at the regen attack map. Node sets and per-table row counts
+match the original exactly; ~0.5% of rows differ in multi-valued attributes whose recorded value
+depends on log processing order. Best released draws on regenerated data: **TP=99/FP=3** and
+**TP=88/FP=2** (baseline: 91/2), config in Section 3.
 
 Alternatively skip step 1 and train directly on the released regenerated merged data
 `release_assets/regenerated_data/clearscope_e3_emb25.pt` (the exact input behind the
