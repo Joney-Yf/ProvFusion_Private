@@ -1,3 +1,11 @@
+# MIGRATION (2026-07-12): this is the orthrus_old variant of the CADETS E3 ingester -- the
+# parser that ACTUALLY produced the original `cadets_e3` database. Forensic evidence: the
+# original file_node_table holds 2,303,164 nodes (98% with no path); in the raw CADETS logs
+# ~91% of FileObject records are FILE_OBJECT_UNIX_SOCKET. The previously vendored orthrus
+# variant SKIPS unix-socket FileObjects (`if FILE_OBJECT_UNIX_SOCKET: continue`), which would
+# drop ~90% of file nodes -> incompatible with the 2.3M original count. orthrus_old does NOT
+# skip them (that branch is commented out), matching the original DB. Vendored verbatim from
+# ~/orthrus_old/create_database/cadets_e3.py for byte-faithful regeneration.
 import os
 import re
 import torch
@@ -18,8 +26,8 @@ def extract_subject_file_uuid(file_path, filelist):
                     match_ans = re.findall(pattern, line)[0]
                     subject_uuid2path[match_ans] = None
                 elif "com.bbn.tc.schema.avro.cdm18.FileObject" in line:
-                    if "FILE_OBJECT_UNIX_SOCKET" in line:
-                        continue
+                    # if "FILE_OBJECT_UNIX_SOCKET" in line:
+                    #     continue
                     pattern = '{"com.bbn.tc.schema.avro.cdm18.FileObject":{"uuid":"(.*?)"'
                     match_ans = re.findall(pattern, line)[0]
                     file_uuid2path[match_ans] = None
