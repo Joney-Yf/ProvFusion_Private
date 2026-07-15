@@ -13,6 +13,7 @@ graph auto-encoder with multi-view anomaly voting. Evaluated on DARPA Transparen
 | CLEARSCOPE_E3 | 6 | 7 | released checkpoint / retrain (Options A/B/C) |
 | CLEARSCOPE_E3 (full pipeline, regenerated from raw logs) | 7 | 7 | released checkpoint / end-to-end (Option D) |
 | THEIA_E3 (full pipeline, regenerated from raw logs) | 99 | 3 | released checkpoint / end-to-end (Option D) |
+| CADETS_E3 (full pipeline, regenerated from raw logs) | 24 | 7 | released checkpoint / end-to-end (Option D) |
 
 TP/FP are unique attack/benign nodes flagged by the final voting detector
 (`method_12_with_different_normalization`, `percentile` normalization).
@@ -80,9 +81,11 @@ release_assets/
 │   ├── CLEARSCOPE_E3_regen_emb25_..._tp7_fp7.pt          # TP=7  / FP=7 (Option-D regenerated data)
 │   ├── CLEARSCOPE_E3_regen_emb25_..._tp6_fp7.pt          # TP=6  / FP=7 (Option-D regenerated data)
 │   ├── CLEARSCOPE_E3_regen_emb25_..._tp6_fp9.pt          # TP=6  / FP=9 (Option-D regenerated data)
-│   └── CLEARSCOPE_E3_regen_emb25_..._tp7_fp16.pt         # TP=7  / FP=16 (Option-D regenerated data)
+│   ├── CLEARSCOPE_E3_regen_emb25_..._tp7_fp16.pt         # TP=7  / FP=16 (Option-D regenerated data)
+│   └── CADETS_E3_regen_d128_..._tp24_fp7.pt              # TP=24 / FP=7 (Option-D regenerated data)
 ├── regenerated_data/
-│   └── clearscope_e3_emb25.pt      # merged training input regenerated from raw logs (Option D)
+│   ├── clearscope_e3_emb25.pt      # merged training input regenerated from raw logs (Option D)
+│   └── cadets_e3_regen.pt         # merged training input regenerated from raw logs (Option D)
 └── MANIFEST.md5
 ```
 
@@ -99,6 +102,7 @@ All runs: `--encoder gatedge --decoder gat --loss_fn sce --optimizer adam --num_
 | CLEARSCOPE_E3 | 64 | 4 | 0.1 | 0.0015 | 200 | 50 | 0.001 | 0.0001 |
 | CLEARSCOPE_E3 (regenerated data, Option D) | 64 | 4 | 0.1 | 0.003 | 100 | 50 | 0.001 | 0 |
 | THEIA_E3 (regenerated data, Option D) | 64 | 8 | 0.3 | 0.0015 | 20 | 50 | 0.001 | 1e-5 |
+| CADETS_E3 (regenerated data, Option D) | 128 | 2 | 0.3 | 0.0015 | 100 | 50 | 0.01 | 0.0001 |
 
 ¹ Not recorded in the THEIA artifact name; the sweep that produced it covered
 `num_hidden ∈ {64, 128, 256}` (`theia_e3.sh`) — use the released checkpoint (Option A) for
@@ -216,6 +220,19 @@ built for the regenerated database — `prepare_data.py` does this automatically
 match the original exactly; ~0.5% of rows differ in multi-valued attributes whose recorded value
 depends on log processing order. Best released draws on regenerated data: **TP=99/FP=3** and
 **TP=88/FP=2** (baseline: 91/2), config in Section 3.
+
+**CADETS_E3 (Option D).** Same four stages; validated end-to-end. Its ingester is the
+`orthrus_old` variant of `create_database/cadets_e3.py` — forensic evidence: the original
+`file_node_table` holds 2,303,164 nodes (~98% path-less) and the raw logs are ~91%
+`FILE_OBJECT_UNIX_SOCKET`; the previously vendored parser skips those sockets (would drop ~90%
+of file nodes), while `orthrus_old` keeps them, matching the original count exactly. The
+regenerated database matches the original on all three node tables (subject/netflow byte-for-byte;
+file differs in only 0.07% of rows, all multi-valued path attributes whose value depends on log
+processing order) but assigns different `index_id` numbering, so use the auto-built regenerated
+labels (`gt_canonical/CADETS_E3_regen_*`) and evaluate from a directory whose
+`CADETS_E3_attack_to_nids.pt` points at the regen attack map. Best released draw on regenerated
+data: **TP=24/FP=7** (baseline: 24/1 — identical recall, all 24 attack nodes detected; the higher
+FP is the edge-reconstruction head variance described under “On randomness”), config in Section 3.
 
 Alternatively skip step 1 and train directly on the released regenerated merged data
 `release_assets/regenerated_data/clearscope_e3_emb25.pt` (the exact input behind the
