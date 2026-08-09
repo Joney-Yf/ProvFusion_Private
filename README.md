@@ -53,7 +53,7 @@ original DARPA JSON logs, with no reliance on any prebuilt data:
 |---|---:|---:|---|
 | **THEIA_E3** (regenerated) | 99 | 3 | `checkpoints/THEIA_E3_regen_..._tp99_fp3.pt` |
 | **CLEARSCOPE_E3** (regenerated) | 7 | 7 | `checkpoints/CLEARSCOPE_E3_regen_emb25_..._tp7_fp7.pt` |
-| **CADETS_E5** (regenerated) | 7 | 11 | `checkpoints/CADETS_E5_regen_..._tp7_fp11.pt` *(in progress)* |
+| **CADETS_E5** (regenerated) | 7 | 9 | `checkpoints/CADETS_E5_regen_r27_a_tp7_fp9.pt` (also r15_a, r31_b) |
 
 > **On randomness.** The edge-reconstruction (link-prediction) head trains with
 > `shuffle=True` and multi-worker data loading, so it is **not bit-reproducible**:
@@ -234,7 +234,7 @@ All runs: `--encoder gatedge --decoder gat --loss_fn sce --optimizer adam --num_
 | CLEARSCOPE_E3 | 64 | 4 | 0.1 | 0.0015 | 200 | 50 | 0.001 | 0.0001 |
 | CLEARSCOPE_E3 (regen, D) | 64 | 4 | 0.1 | 0.003 | 100 | 50 | 0.001 | 0 |
 | THEIA_E3 (regen, D) | 64 | 8 | 0.3 | 0.0015 | 20 | 50 | 0.001 | 1e-5 |
-| CADETS_E5 (regen, D) | 64 | 8 | 0.1 | 0.0015 | 500 | 10 | 1e-4 | 5e-6 |
+| CADETS_E5 (regen, D) | 64 | 8 | 0.1 | 0.0015 | 500 | 20 | 1e-4 | 5e-6 |
 | THEIA_E5 | — | — | — | — | — | — | — | — | *(placeholder)* |
 | CLEARSCOPE_E5 | — | — | — | — | — | — | — | — | *(placeholder)* |
 
