@@ -48,6 +48,14 @@ DATASETS = {
         "legacy_gt": os.path.expanduser("~/guard/Ground_Truth/ground_truth_cadet_v2.pt"),
         "legacy_map": os.path.join(REPO, "CADETS_E3_attack_to_nids.pt"),
     },
+    "CADETS_E5": {
+        "csvs_and_windows": [
+            ("E5-CADETS/node_cadets_e5_attack1_0516.csv", [1558013460000000000, 1558015920000000000]),
+            ("E5-CADETS/node_cadets_e5_attack2_0517.csv", [1558102500000000000, 1558121580000000000]),
+        ],
+        "legacy_gt": os.path.expanduser("~/guard/Ground_Truth/ground_truth_nids_cadets_e5.pt"),
+        "legacy_map": "/home/yangfan/guard/v3_GraphMAE/CADETS_E5_attack_to_nids.pt",
+    },
     "CLEARSCOPE_E5": {
         "csvs_and_windows": [
             ("E5-CLEARSCOPE/node_clearscope_e5_appstarter_0515.csv",     [1557949080000000000, 1557951540000000000]),
