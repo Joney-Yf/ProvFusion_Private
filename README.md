@@ -19,8 +19,10 @@ training backbone is a GraphMAE-style masked graph auto-encoder with an edge-awa
 graph-attention encoder.
 
 This repository is the refactored core used to produce the results reported in the paper.
-Detection on all six DARPA Transparent Computing datasets (E3 and E5) is reproduced
-end-to-end from the released checkpoints and data.
+Detection on all nine benchmark datasets — six DARPA Transparent Computing (TC) datasets
+(E3/E5: CADETS, THEIA, CLEARSCOPE) and three DARPA OpTC hosts (H201 / H051 / H501) — is
+reproduced from the released checkpoints and data, each verified to re-evaluate to exactly
+the reported numbers.
 
 ---
 
@@ -31,18 +33,22 @@ Node-level detection on the **refined ground truth**. TP / FP count the unique m
 the reference numbers reported in the paper; the released checkpoint behind each row
 re-evaluates to exactly these values (see [Reproducing the results](#-reproducing-the-results)).
 
-| Dataset | TP | FP | Reproduction checkpoint |
+| Dataset | TP | FP | Reproduction checkpoint (in `release_assets/checkpoints/`) |
 |---|---:|---:|---|
-| **CADETS_E3** | 24 | 1 | `checkpoints/CADETS_E3_..._gatedge_gat_data.pt` |
-| **THEIA_E3** | 91 | 2 | `checkpoints/THEIA_E3_..._gatedge_gat_data.pt` |
-| **CLEARSCOPE_E3** | 6 | 7 | `checkpoints/CLEARSCOPE_E3_..._gatedge_gat_data.pt` |
-| **CADETS_E5** | 7 | 9 | `checkpoints/CADETS_E5_<TODO>.pt` *(in progress)* |
-| **THEIA_E5** | 11 | 2 | `checkpoints/THEIA_E5_<TODO>.pt` *(placeholder)* |
-| **CLEARSCOPE_E5** | 10 | 16 | `checkpoints/CLEARSCOPE_E5_<TODO>.pt` *(placeholder)* |
+| **CADETS_E3** | 24 | 1 | `CADETS_E3_loss_sce_dim_64_nhd_2_nh_0.3_..._gatedge_gat_data.pt` |
+| **THEIA_E3** | 91 | 2 | `THEIA_E3_loss_sce_rpr_8_nh_0.3_..._gatedge_gat_data.pt` |
+| **CLEARSCOPE_E3** | 6 | 7 | `CLEARSCOPE_E3_loss_sce_dim_64_nhd_4_nh_0.1_..._gatedge_gat_data.pt` |
+| **CADETS_E5** | 7 | 9 | `CADETS_E5_loss_sce_dim_64_nhd_8_nh_0.5_..._gatedge_gat_data.pt` |
+| **THEIA_E5** | 11 | 2 | `THEIA_E5_loss_sce_dim_64_nhd_8_nh_0.5_..._gatedge_gat_data.pt` |
+| **CLEARSCOPE_E5** | 10 | 16 | `CLEARSCOPE_E5_loss_sce_rpr_8_nh_0.1_..._gatedge_gat_data.pt` |
+| **OPTC_h201** | 3 | 5 | `OPTC_h201_loss_sce_dim_64_nhd_2_nh_0.5_..._gatedge_gat.pt` |
+| **OPTC_h051** | 16 | 30 | `OPTC_h051_loss_sce_dim_64_nhd_8_nh_0.5_..._gatedge_gat.pt` |
+| **OPTC_h501** | 2 | 4 | `OPTC_h501_loss_sce_dim_64_nhd_2_nh_0.3_..._gatedge_gat.pt` |
 
 Each row is reproducible from a released **`.pt`** saved middle result plus the merged
-data file and ground truth. The E5 filenames are placeholders while the corresponding
-checkpoints are finalized.
+data file and ground truth (all in `release_assets/`; full filenames in
+`release_assets/MANIFEST.md5`). Every checkpoint above was re-evaluated with this repo's
+evaluation code and confirmed to reproduce its row **exactly**.
 
 ### End-to-end from raw logs (full pipeline, Option D)
 
@@ -51,9 +57,10 @@ original DARPA JSON logs, with no reliance on any prebuilt data:
 
 | Dataset | TP | FP | Reproduction checkpoint |
 |---|---:|---:|---|
-| **THEIA_E3** (regenerated) | 99 | 3 | `checkpoints/THEIA_E3_regen_..._tp99_fp3.pt` |
-| **CLEARSCOPE_E3** (regenerated) | 7 | 7 | `checkpoints/CLEARSCOPE_E3_regen_emb25_..._tp7_fp7.pt` |
-| **CADETS_E5** (regenerated) | 7 | 9 | `checkpoints/CADETS_E5_regen_r27_a_tp7_fp9.pt` (also r15_a, r31_b) |
+| **CADETS_E3** (regenerated) | 24 | 1 | `checkpoints/CADETS_E3_regen_d128_mask0.5_h2_ep100_epf50_tp24_fp1.pt` |
+| **THEIA_E3** (regenerated) | 99 | 3 | `checkpoints/THEIA_E3_regen_d64_lr0.0015_wd0.001_wdf1e-5_e20_h8_r9_tp99_fp3.pt` |
+| **CLEARSCOPE_E3** (regenerated) | 7 | 7 | `checkpoints/CLEARSCOPE_E3_regen_emb25_lr0.003_wd0.001_wdf0_e100_h4_tp7_fp7.pt` |
+| **CADETS_E5** (regenerated) | 7 | 9 | `checkpoints/CADETS_E5_regen_d64_mask0.1_h8_wd1e-4_wdf2e-6_ep500_epf20_r27_tp7_fp9.pt` (also r15, r31) |
 
 > **On randomness.** The edge-reconstruction (link-prediction) head trains with
 > `shuffle=True` and multi-worker data loading, so it is **not bit-reproducible**:
@@ -105,16 +112,41 @@ parent/
 ```
 
 Per-dataset training inputs (`--data_path` is the merged `.pt` built from `raw_data`; it
-is created automatically on first run and reused afterwards):
+is created automatically on first run and reused afterwards). All merged data files and
+ground truths below ship in `release_assets/` (merged data at its root, labels under
+`release_assets/ground_truth/`):
 
 | Dataset | `--data_path` | `--ground_truth_path` |
 |---|---|---|
 | THEIA_E3 | `theia_merge_edge_data.pt` | `gt_canonical/THEIA_E3_orig_ground_truth_nids.pt` |
 | CADETS_E3 | `cadets_e3.pt` | `gt_canonical/CADETS_E3_orig_ground_truth_nids.pt` |
 | CLEARSCOPE_E3 | `clearscope_e3_merge_edge_data.pt` | `gt_canonical/CLEARSCOPE_E3_orig_ground_truth_nids.pt` |
-| THEIA_E5 | `theia_e5_merge_edge_data_final.pt` | `../Ground_Truth/ground_truth_nids_theia_e5.pt` |
-| CADETS_E5 | `cadets_e5_merge_edge_data.pt` | `../Ground_Truth/ground_truth_nids_cadets_e5.pt` |
-| CLEARSCOPE_E5 | `clearscope_e5_merge_edge_data.pt` | `../Ground_Truth/ground_truth_nids_clearscope_e5.pt` |
+| THEIA_E5 | `theia_e5_merge_edge_data_final.pt` | `release_assets/ground_truth/ground_truth_nids_theia_e5.pt` |
+| CADETS_E5 | `cadets_e5_merge_edge_data.pt` | `gt_canonical/CADETS_E5_orig_ground_truth_nids.pt` |
+| CLEARSCOPE_E5 | `clearscope_e5_merge_edge_data.pt` | `gt_canonical/CLEARSCOPE_E5_orig_ground_truth_nids.pt` |
+| OPTC_h201 | `optc_h201_merge_edge_normalized.pt` | `release_assets/ground_truth/ground_truth_nids_optc_h201.pt` |
+| OPTC_h051 | `optc_h051_merge_edge_normalized.pt` | `release_assets/ground_truth/ground_truth_nids_optc_h051.pt` |
+| OPTC_h501 | `optc_h501_merge_edge_normalized.pt` | `release_assets/ground_truth/ground_truth_nids_optc_h501.pt` |
+
+> **CLEARSCOPE_E5 ground truth caveat.** Use the **refined 53-node** labels
+> (`gt_canonical/CLEARSCOPE_E5_orig_ground_truth_nids.pt`, also copied to
+> `release_assets/ground_truth/`). The historical Orthrus label file for CLEARSCOPE_E5
+> has only 51 nodes — it predates the +2 refined nodes — and evaluating against it yields
+> 9/17 instead of the reported 10/16.
+
+### Released assets
+
+`release_assets/` is the self-contained distribution bundle (integrity:
+`release_assets/MANIFEST.md5`):
+
+```
+release_assets/
+├── checkpoints/          # the 9 paper-result checkpoints + Option-D regen checkpoints
+├── ground_truth/         # per-dataset ground_truth_nids_*.pt + *_attack_to_nids.pt
+├── regenerated_data/     # merged .pt regenerated end-to-end from raw logs (Option D)
+├── *.pt                  # merged training inputs on original data (Option A/B)
+└── MANIFEST.md5
+```
 
 ### Refined ground truth
 
@@ -136,7 +168,8 @@ Four entry points, fastest to fullest.
 ### Option A — Evaluate a released checkpoint *(deterministic, minutes)*
 
 Evaluation needs the merged data `.pt`, the ground truth, and the per-dataset
-`{DATASET}_attack_to_nids.pt` in the working directory:
+`{DATASET}_attack_to_nids.pt` in the working directory — all shipped under
+`release_assets/` (labels in `release_assets/ground_truth/`):
 
 ```bash
 python -c "
@@ -215,9 +248,9 @@ CUDA_VISIBLE_DEVICES=0 python main_transductive.py --device 0 \
   --linear_prob --scheduler --use_cfg --seeds 1 --normalization_method percentile
 ```
 
-Validated end-to-end on CLEARSCOPE_E3, THEIA_E3 and CADETS_E5. Because Word2Vec is not
-bit-reproducible across machines, a fresh regeneration is a fresh embedding draw — sweep
-`lr` / `weight_decay` around the Option-D config and rerun per *On randomness*.
+Validated end-to-end on CADETS_E3, THEIA_E3, CLEARSCOPE_E3 and CADETS_E5. Because Word2Vec
+is not bit-reproducible across machines, a fresh regeneration is a fresh embedding draw —
+sweep `lr` / `weight_decay` around the Option-D config and rerun per *On randomness*.
 
 ---
 
@@ -232,14 +265,20 @@ All runs: `--encoder gatedge --decoder gat --loss_fn sce --optimizer adam --num_
 | THEIA_E3 | —¹ | 8 | 0.3 | 0.0015 | 5 | 50 | 0.01 | 0.0001 |
 | CADETS_E3 | 64 | 2 | 0.3 | 0.0015 | 5 | 50 | 0.001 | 0.0001 |
 | CLEARSCOPE_E3 | 64 | 4 | 0.1 | 0.0015 | 200 | 50 | 0.001 | 0.0001 |
+| THEIA_E5 | 64 | 8 | 0.5 | 0.0015 | 500 | 10 | 1e-5 | 2e-6 |
+| CADETS_E5 | 64 | 8 | 0.5 | 0.0015 | 500 | 10 | 1e-4 | 5e-5 |
+| CLEARSCOPE_E5 | —¹ | 8 | 0.1 | 0.0015 | 200 | 20 | 1e-4 | 5e-5 |
+| OPTC_h201 | 64 | 2 | 0.5 | 0.0015 | 500 | 10 | 1e-4 | 2e-6 |
+| OPTC_h051 ² | 64 | 8 | 0.5 | 0.0015 | 500 | 10 | 1e-4 | 5e-5 |
+| OPTC_h501 ² | 64 | 2 | 0.3 | 0.0015 | 500 | 10 | 5e-5 | 5e-5 |
 | CLEARSCOPE_E3 (regen, D) | 64 | 4 | 0.1 | 0.003 | 100 | 50 | 0.001 | 0 |
 | THEIA_E3 (regen, D) | 64 | 8 | 0.3 | 0.0015 | 20 | 50 | 0.001 | 1e-5 |
+| CADETS_E3 (regen, D) | 128 | 2 | 0.5 | 0.0015 | 100 | 50 | 0.01 | 0.0001 |
 | CADETS_E5 (regen, D) | 64 | 8 | 0.1 | 0.0015 | 500 | 20 | 1e-4 | 5e-6 |
-| THEIA_E5 | — | — | — | — | — | — | — | — | *(placeholder)* |
-| CLEARSCOPE_E5 | — | — | — | — | — | — | — | — | *(placeholder)* |
 
-¹ Not recorded in the THEIA_E3 artifact name; use the released checkpoint (Option A) for
-the exact number, or sweep `num_hidden ∈ {64, 128, 256}` when retraining.
+¹ Not recorded in the artifact name (`rpr_8` files); use the released checkpoint
+(Option A) for the exact number, or sweep `num_hidden ∈ {64, 128, 256}` when retraining.
+² OPTC_h051 / OPTC_h501 use `--lr_f 0.0005` (recorded as `lsf` in the artifact name).
 
 `--use_cfg` additionally applies the per-dataset entries in `configs.yml`. Sweep scripts
 with these grids are provided as `theia_e3.sh`, `cadets_e3.sh`, `clearscope_e3.sh`, and
