@@ -23,6 +23,7 @@ orthrus_for_data_prepration/
 
 # Logs
 *.log
+!Ground_Truth_csv/**/*_AUDIT.log
 logs*/
 optc_log/
 
