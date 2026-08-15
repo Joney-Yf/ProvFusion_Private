@@ -26,6 +26,19 @@ the reported numbers.
 
 ---
 
+## 📥 Download
+
+All large artifacts (checkpoints, merged training data, ground-truth labels, and the
+per-graph embeddings for all nine datasets, ~310 GB total) are hosted on Hugging Face:
+
+**<https://huggingface.co/datasets/Joney233/ProvFusion>**
+
+
+
+Verify integrity with cadets_e3.pt: OK after downloading.
+
+---
+
 ## 📊 Detection Results
 
 Node-level detection on the **refined ground truth**. TP / FP count the unique malicious
