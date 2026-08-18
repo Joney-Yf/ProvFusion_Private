@@ -51,3 +51,9 @@ venv/
 
 # macOS
 .DS_Store
+
+# Server-specific real config (never commit)
+data_preparation/local_config.json
+
+# Release binaries are distributed via Hugging Face, not git
+release_assets/

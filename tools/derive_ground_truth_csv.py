@@ -13,7 +13,27 @@ they go to a *_needs_review.csv for human adjudication. An AUDIT log records eve
 import os, torch, psycopg2, shutil
 
 GT = os.path.expanduser("~/guard/Ground_Truth/darpa/darpa")
-REPO = os.path.expanduser("~/guard/OpenProvFusion")
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def _local_config():
+    lc = os.path.join(REPO, "data_preparation", "local_config.json")
+    if os.path.exists(lc):
+        import json
+        return json.load(open(lc))
+    return {}
+
+
+def _db_password():
+    # Open-source note: real credentials come from data_preparation/local_config.json
+    # (gitignored) or the PROVFUSION_DB_PASSWORD environment variable.
+    return (_local_config().get("database", {}).get("password")
+            or os.environ.get("PROVFUSION_DB_PASSWORD", "YOUR_DB_PASSWORD"))
+
+
+# Only needed for `verify` mode / resolving legacy maps from the original repo.
+_V3_DIR = (_local_config().get("v3_graphmae_dir")
+           or os.environ.get("V3_GRAPHMAE_DIR", "/path/to/v3_GraphMAE"))
+
 
 SPECS = {
     "THEIA_E3": {
@@ -29,7 +49,7 @@ SPECS = {
     },
     "CLEARSCOPE_E5": {
         "db": "clearscope_e5",
-        "attack_map": "/home/yangfan/guard/v3_GraphMAE/CLEARSCOPE_E5_attack_to_nids.pt",
+        "attack_map": os.path.join(_V3_DIR, "CLEARSCOPE_E5_attack_to_nids.pt"),
         "legacy_gt": os.path.expanduser("~/guard/Ground_Truth/ground_truth_nids_clearscope_e5.pt"),
         "addition_list": [158937, 445211],
         "attacks": [
@@ -51,7 +71,7 @@ SPECS = {
 }
 
 def db_lookup(db):
-    con = psycopg2.connect(database=db, host="localhost", user="postgres", password="yangfan", port=5432)
+    con = psycopg2.connect(database=db, host="localhost", user="postgres", password=_db_password(), port=5432)
     cur = con.cursor(); out = {}
     for t, cols, fmt in [
         ("subject_node_table", "path,cmd", lambda r: "{'subject': '%s %s'}" % (r[0] if r[0] is not None else "None", r[1] if r[1] is not None else "")),

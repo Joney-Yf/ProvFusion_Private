@@ -1,0 +1,16 @@
+{
+  "database": {
+    "host": "localhost",
+    "user": "postgres",
+    "password": "YOUR_DB_PASSWORD",
+    "port": "5432"
+  },
+  "datasets": {
+    "THEIA_E5":      { "raw_dir": "/path/to/DARPA_TC/E5/theia/json_file/" },
+    "THEIA_E3":      { "raw_dir": "/path/to/DARPA_TC/E3/theia/json_file/" },
+    "CADETS_E5":     { "raw_dir": "/path/to/DARPA_TC/E5/cadets/json_file/" },
+    "CADETS_E3":     { "raw_dir": "/path/to/DARPA_TC/E3/cadets/json_file/" },
+    "CLEARSCOPE_E5": { "raw_dir": "/path/to/DARPA_TC/E5/clearscope/json_file/" },
+    "CLEARSCOPE_E3": { "raw_dir": "/path/to/DARPA_TC/E3/clearscope/json_file/" }
+  }
+}

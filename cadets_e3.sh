@@ -1,6 +1,7 @@
 #!/bin/bash
-source ~/anaconda3/etc/profile.d/conda.sh
-conda activate orthrus
+# Activate your Python environment first (adjust to your setup):
+source ~/anaconda3/etc/profile.d/conda.sh 2>/dev/null || true
+conda activate orthrus  # the environment created from requirements.txt
 
 learning_rates=(0.0015 0.00015 0.0001)
 lr_fs=(0.001)

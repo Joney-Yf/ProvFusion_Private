@@ -1,6 +1,7 @@
 #!/bin/bash
-source ~/anaconda3/etc/profile.d/conda.sh
-conda activate orthrus
+# Activate your Python environment first (adjust to your setup):
+source ~/anaconda3/etc/profile.d/conda.sh 2>/dev/null || true
+conda activate orthrus  # the environment created from requirements.txt
 
 # CLEARSCOPE_E3 comprehensive sweep (dim=64, seed=1).
 # Baseline config (v3): dim_64 nhd_4 nh_0.1 mp_200 mpf_50 wd_0.001 wdf_0.0001 -> TP=6 FP=7

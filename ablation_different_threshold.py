@@ -1999,7 +1999,9 @@ if __name__ == '__main__':
     # filename = 'saved_middle_result/CADETS_E5_loss_sce_rpr_2_nh_0.3_nl_2_lr_0.0015_mp_500_mpf_10_wd_5e-05_wdf_5e-05_gatedge_gat_data.pt'
     # for file in os.listdir('ablation_study'):
         # if file.endswith('data.pt'):  
-    filename =  '/home/yangfan/guard/v3_GraphMAE/ablation_study/THEIA_E3_loss_sce_dim_64_nhd_8_nh_0.3_nl_2_lr_0.01_mp_5_mpf_50_wd_0.01_wdf_0.0001_gatedge_gat_different_layer.pt'
+    # NOTE: point this at the checkpoint you want to analyse, e.g.
+    # 'ablation_study/THEIA_E3_..._different_layer.pt'
+    filename = 'path/to/checkpoint.pt'
 
     print('============================Processing file:=====================\n', filename)
     data = 'theia_merge_edge_data.pt'

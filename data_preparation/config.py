@@ -26,7 +26,7 @@ ROOT_GROUND_TRUTH_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abs
 DATABASE_DEFAULT_CONFIG = {
      "host": 'localhost',  # Host machine where the db is located
      "user": 'postgres',  # Database user
-     "password": 'yangfan',  # The password to the database user
+     "password": 'YOUR_DB_PASSWORD',  # placeholder — resolved from local_config.json (see end of file)
      "port": '5432',  # The port number for Postgres
 }
 # ================================================================================
@@ -148,7 +148,7 @@ TASK_ARGS = {
 
 DATASET_DEFAULT_CONFIG = {
      "THEIA_E5": {
-          "raw_dir": "/home/original-home/raid-disk/yangfan/sbustreamspot-data/darpa5/Data/theia/json_file/",  # NOTE: /path/to/json/files/
+          "raw_dir": "/path/to/DARPA_TC/E5/theia/json_file/",  # NOTE: /path/to/json/files/
           "database": "theia_e5",
           "database_all_file": "theia_e5",
           "num_node_types": 3,
@@ -167,7 +167,7 @@ DATASET_DEFAULT_CONFIG = {
      "THEIA_E3": {
           # MIGRATION: vendored value was "/data/" (stale path from the upstream authors'
           # machine); fixed to the actual THEIA E3 JSON location on our server.
-          "raw_dir": "/home/original-home/raid-disk/yangfan/sbustreamspot-data/darpa3/theia/json_file",  # NOTE: /path/to/json/files/
+          "raw_dir": "/path/to/DARPA_TC/E3/theia/json_file/",  # NOTE: /path/to/json/files/
           "database": "theia_e3",
           "database_all_file": "theia_e3",
           "num_node_types": 3,
@@ -189,7 +189,7 @@ DATASET_DEFAULT_CONFIG = {
           ]
      },
      "CADETS_E5": {
-          "raw_dir": "/home/original-home/raid-disk/yangfan/sbustreamspot-data/darpa5/Data/cadets/json_file/",  # NOTE: /path/to/json/files/
+          "raw_dir": "/path/to/DARPA_TC/E5/cadets/json_file/",  # NOTE: /path/to/json/files/
           "database": "cadets_e5",
           "database_all_file": "cadets_e5",
           "num_node_types": 3,
@@ -208,7 +208,7 @@ DATASET_DEFAULT_CONFIG = {
           ]
      },
      "CADETS_E3": {
-          "raw_dir": "/home/original-home/raid-disk/yangfan/sbustreamspot-data/darpa3/cadet/json_file",  # NOTE: /path/to/json/files/
+          "raw_dir": "/path/to/DARPA_TC/E3/cadets/json_file/",  # NOTE: /path/to/json/files/
           "database": "cadets_e3",
           "database_all_file": "cadets_e3",
           "num_node_types": 3,
@@ -230,7 +230,7 @@ DATASET_DEFAULT_CONFIG = {
           ],
      },
      "CLEARSCOPE_E5": {
-          "raw_dir": "/home/original-home/raid-disk/yangfan/sbustreamspot-data/darpa5/Data/clearscope/json_file/",  # NOTE: /path/to/json/files/
+          "raw_dir": "/path/to/DARPA_TC/E5/clearscope/json_file/",  # NOTE: /path/to/json/files/
           "database": "clearscope_e5",
           "database_all_file": "clearscope_e5",
           "num_node_types": 3,
@@ -253,7 +253,7 @@ DATASET_DEFAULT_CONFIG = {
           ],
      },
      "CLEARSCOPE_E3": {
-          "raw_dir": "/home/original-home/raid-disk/yangfan/sbustreamspot-data/darpa3/clearscope/json_file",  # NOTE: /path/to/json/files/
+          "raw_dir": "/path/to/DARPA_TC/E3/clearscope/json_file/",  # NOTE: /path/to/json/files/
           "database": "clearscope_e3",
           "database_all_file": "clearscope_e3",
           "num_node_types": 3,
@@ -664,3 +664,18 @@ ntype2id ={
      3: 'netflow',
      'netflow': 3,
 }
+
+# ================================================================================
+# Open-source release note: server-specific values above (the database password and
+# each dataset's `raw_dir`) are PLACEHOLDERS. The pipeline resolves the real values
+# from `data_preparation/local_config.json` (gitignored). Copy
+# `local_config.example.json`, fill in your own values, and it is applied automatically.
+_LOCAL_CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "local_config.json")
+if os.path.exists(_LOCAL_CONFIG_PATH):
+    import json as _json
+    with open(_LOCAL_CONFIG_PATH) as _f:
+        _local_cfg = _json.load(_f)
+    DATABASE_DEFAULT_CONFIG.update(_local_cfg.get("database", {}))
+    for _ds_name, _override in _local_cfg.get("datasets", {}).items():
+        if _ds_name in DATASET_DEFAULT_CONFIG:
+            DATASET_DEFAULT_CONFIG[_ds_name].update(_override)

@@ -22,6 +22,26 @@ import sys, os, torch, psycopg2
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CSV_DIR = os.path.join(REPO, "Ground_Truth_csv")
 
+def _local_config():
+    lc = os.path.join(REPO, "data_preparation", "local_config.json")
+    if os.path.exists(lc):
+        import json
+        return json.load(open(lc))
+    return {}
+
+
+def _db_password():
+    # Open-source note: real credentials come from data_preparation/local_config.json
+    # (gitignored) or the PROVFUSION_DB_PASSWORD environment variable.
+    return (_local_config().get("database", {}).get("password")
+            or os.environ.get("PROVFUSION_DB_PASSWORD", "YOUR_DB_PASSWORD"))
+
+
+# Only needed for `verify` mode / resolving legacy maps from the original repo.
+_V3_DIR = (_local_config().get("v3_graphmae_dir")
+           or os.environ.get("V3_GRAPHMAE_DIR", "/path/to/v3_GraphMAE"))
+
+
 DATASETS = {
     "THEIA_E3": {
         "csvs_and_windows": [
@@ -54,7 +74,7 @@ DATASETS = {
             ("E5-CADETS/node_cadets_e5_attack2_0517.csv", [1558102500000000000, 1558121580000000000]),
         ],
         "legacy_gt": os.path.expanduser("~/guard/Ground_Truth/ground_truth_nids_cadets_e5.pt"),
-        "legacy_map": "/home/yangfan/guard/v3_GraphMAE/CADETS_E5_attack_to_nids.pt",
+        "legacy_map": os.path.join(_V3_DIR, "CADETS_E5_attack_to_nids.pt"),
     },
     "CLEARSCOPE_E5": {
         "csvs_and_windows": [
@@ -64,13 +84,13 @@ DATASETS = {
             ("E5-CLEARSCOPE/node_clearscope_e5_tester_0517.csv",         [1558124400000000000, 1558124880000000000]),
         ],
         "legacy_gt": os.path.expanduser("~/guard/Ground_Truth/ground_truth_nids_clearscope_e5.pt"),
-        "legacy_map": "/home/yangfan/guard/v3_GraphMAE/CLEARSCOPE_E5_attack_to_nids.pt",
+        "legacy_map": os.path.join(_V3_DIR, "CLEARSCOPE_E5_attack_to_nids.pt"),
     },
 }
 
 
 def uuid_to_index(db):
-    con = psycopg2.connect(database=db, host="localhost", user="postgres", password="yangfan", port=5432)
+    con = psycopg2.connect(database=db, host="localhost", user="postgres", password=_db_password(), port=5432)
     cur = con.cursor()
     m = {}
     for t in ["netflow_node_table", "subject_node_table", "file_node_table"]:

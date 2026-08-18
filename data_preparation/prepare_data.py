@@ -49,7 +49,8 @@ care about reproducing previous embeddings.
 
 Prerequisites for stage 1 (create_db) — server-environment, unchanged from the original:
     - A running Postgres reachable with `DATABASE_DEFAULT_CONFIG` in config.py
-      (host=localhost, user=postgres, password=yangfan, port=5432).
+      (defaults: host=localhost, user=postgres, port=5432; the password is resolved
+      from data_preparation/local_config.json — see the note at the end of config.py).
     - The target database AND its tables must already exist: run
       `data_preparation/postgres/init-create-databases.sh [out_suffix]` (the full-schema
       variant, not `init-create-empty-databases.sh`) once beforehand. The per-dataset

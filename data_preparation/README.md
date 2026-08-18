@@ -84,7 +84,10 @@ original `orthrus.py` entry point.
 ## Prerequisites (server environment — unchanged from the original project)
 
 1. **Postgres running** and reachable with `DATABASE_DEFAULT_CONFIG` in `config.py`
-   (host=localhost, user=postgres, password=`yangfan`, port=5432).
+   (defaults: host=localhost, user=postgres, port=5432). The DB password and the
+   per-dataset `raw_dir` paths are placeholders in the repo; copy
+   `data_preparation/local_config.example.json` to `data_preparation/local_config.json`
+   (gitignored) and fill in your own — it is applied automatically.
 2. **Schema created.** The stage-1 scripts `INSERT` into pre-existing tables; they do **not**
    create them. Create the databases + tables first using the vendored
    `postgres/init-create-databases.sh [out_suffix]` (the full-schema variant —
@@ -92,8 +95,9 @@ original `orthrus.py` entry point.
    `file_node_table`, `netflow_node_table`, `subject_node_table` for each dataset. Pass the
    same string you give `--out_suffix` to build isolated DBs (e.g.
    `init-create-databases.sh _Test_for_OpenSource`) instead of the originals.
-3. **Raw JSON logs** present at the `raw_dir` path baked into `DATASET_DEFAULT_CONFIG` in
-   `config.py` (per-dataset, server-specific). Adjust `raw_dir` there if your paths differ.
+3. **Raw JSON logs** present at the `raw_dir` path for each dataset. The repo ships
+   placeholder paths in `DATASET_DEFAULT_CONFIG`; set your real paths via
+   `data_preparation/local_config.json` (see point 1).
 4. **Empty database.** Stage 1 aborts if any of the four tables already contains rows:
    the INSERT scripts have no TRUNCATE/upsert logic (re-running would crash on duplicate
    keys), and — more subtly — a from-scratch re-ingestion can assign **different
@@ -117,8 +121,8 @@ original `orthrus.py` entry point.
   `config/orthrus.yml` and `postgres/`. Only `config.py` was adapted (path-depth fixes, marked
   `# MIGRATION`) because it moved from `src/` to `data_preparation/` (which is itself the import
   root). The algorithm code is unchanged.
-- **Hardcoded DB password and `raw_dir` paths** are kept as-is (server-specific) and flagged
-  for future cleanup.
+- **DB password and `raw_dir` paths** are placeholders in the repo; real values live in
+  the gitignored `data_preparation/local_config.json` (see `local_config.example.json`).
 - The vendored `orthrus.yml` still contains `detection` / `attack_reconstruction` sections
   (the config validator requires them), but those stages are never imported or run here.
 
