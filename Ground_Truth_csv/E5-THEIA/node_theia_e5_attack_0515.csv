@@ -1,0 +1,70 @@
+80370C6E-859F-D0CB-142A-500000000000,{'netflow': '128.55.12.110:40837->8:0'},71093
+80370C6E-1600-8037-0CA7-67E600000000,{'netflow': '128.55.12.110:22->8:0'},71175
+80370C6E-1600-8037-0CA7-68E600000000,{'netflow': '128.55.12.110:22->8:0'},71180
+80370C6E-1600-8037-0CA7-69E600000000,{'netflow': '128.55.12.110:22->8:0'},71183
+00000000-0000-0000-0000-000000000000,{'subject': '/sbin/init '},209154
+6CCFB5A3-9CB2-5689-BA97-7776FBB241F0,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1573896
+49EFF3E1-5FD4-50FF-8C22-B12E8C7A72DD,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1573897
+EA1A155C-E196-5FDA-9F66-A7566988D863,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1574423
+86267D07-B3FB-57D3-9667-4D9EE753DC83,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1574730
+FB39B4E5-3279-5FFD-8F6E-39F4786DA309,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1574758
+42FFDA9B-DA03-5FE6-B229-F91FB096D907,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1574761
+299666B9-5F8A-579D-9868-443E19D5ED4E,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1574762
+8D12627C-42A6-50C9-B4DE-A3ED440E33BD,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1574763
+B51CA62D-A770-574B-ACEE-5B34B7EC46F2,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1574855
+5FAEC575-D42B-57C9-B222-800D68DAAA74,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1574856
+54E97188-0A55-5521-99CD-E44A09C26D62,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1574857
+BD173AC3-940D-5057-BB51-3A0B825CF17B,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575012
+0C3B0E5F-D50B-5195-9952-B0EAE954AF33,{'subject': '/usr/sbin/sshd sshd: admin@notty   '},1575013
+E66A51DE-BEA0-54B1-AE8D-78C2F73C2870,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1575014
+420A2120-FB2B-57C3-A185-160482A8871C,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1575015
+FE183354-E393-5ADA-83B2-8BD28A3A1A56,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575016
+FB9DA469-6B27-5945-A305-5611A6D5D175,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575212
+C3830CEE-97E3-560B-BFDB-C2B129094C55,{'subject': '/usr/sbin/sshd sshd: admin@notty   '},1575213
+938E2472-6080-596C-B5E6-77136AD01A40,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1575214
+CE5CCB85-9FA4-57E8-8BEB-35E76C4C6889,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1575215
+8235E527-1C02-5824-B7AC-3BED86C3FC23,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1575216
+7D2F83ED-6DF2-5C07-A425-CD08B63B9F82,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1575217
+1C63B3C8-E66D-5060-B097-CC658A2D7C91,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575218
+1CD6069D-AB77-5DC8-8FBD-B4024CCC2AAA,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575249
+14F36D96-C877-5889-A809-819319D358D7,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575489
+7C836D91-7F41-562E-9F5E-CC6E613D0C5B,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1575518
+1E66435F-090C-5B26-81D2-DCDC3E064FE8,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1575522
+77315121-57D8-57AC-8B74-1E2D106E6DC0,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575530
+4F1BDDC7-E2CA-514D-965F-140A4D45E3C0,{'subject': '/usr/sbin/sshd sshd: admin@pts/3   '},1575531
+77A5F47E-9F41-5F79-81F2-1D603BEE02CB,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575781
+E71415C9-824F-57E8-8CD8-E2DD1BF5F1C2,{'subject': '/usr/sbin/sshd sshd: admin@notty   '},1575782
+F3AB14A3-4CC1-54F3-BEFB-092E67BE33CC,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1575806
+599B082D-A4DE-5153-B9A1-005DD53458ED,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1575809
+960167A3-320D-5D01-A5D7-6BEDB9BA2F37,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1575812
+118D7087-A326-557D-9AB8-7215FFD91390,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1575813
+4BD068FA-4AC9-5C4B-84A5-4B03CD4048DE,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575814
+D5E6AF81-29C2-557C-873C-810E7965CCBE,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1575967
+A2555C30-F77B-5252-9086-960B8B744820,{'subject': '/usr/sbin/sshd sshd: admin@pts/3   '},1575968
+EB29D902-6C8B-556C-AD67-E6D459D673A4,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1576075
+CDD9894A-2EE3-5167-9191-8FF33DA9822F,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1576076
+FBDDE7B6-24EE-50EB-A34B-2588A0DB4EDE,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1576077
+8E6AB6B3-C0E9-5AC4-A429-D8C44269E538,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1576232
+16945BF4-3873-54E6-B177-FE882B4F3C21,{'subject': '/usr/sbin/sshd sshd: admin@pts/3   '},1576233
+2C4719F7-5AF8-5099-A89D-E67CA90F18B6,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1576330
+DB0E28AD-412D-5EDB-9090-A60CA954927A,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1576333
+D7D38965-3632-51D5-ACC2-C014598A1B02,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1576334
+7F25C02A-1173-5FFA-A53F-CFD6DFA25460,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1576335
+6B00C251-E650-5D1A-AFA5-A577CF1A7496,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1576490
+7CC8E4BF-965C-5C41-82F0-76F2841CA2D4,{'subject': '/usr/sbin/sshd sshd: admin@pts/3   '},1576491
+16078C68-57FD-506D-92E9-29035A8C800C,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1576595
+F3470B6E-32F1-55CD-BDBB-29271D1A1337,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1576596
+4B0F1E8B-633B-55E5-9CE6-3C3013BCFC97,{'subject': '/usr/local/lib/firefox-54.0.1/firefox firefox'},1576597
+A05BE6D6-98DE-5CF2-86C3-AFF61EAE57A3,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1576865
+600330D2-9A49-5220-BD13-17B21A236F18,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1576866
+6DC79251-B698-5824-A030-9BFB327FC685,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1576867
+1FCC1D14-89FE-5E43-BF80-0C13580C9E61,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1577020
+D3C62334-1496-52A9-971D-130C53593EDF,{'subject': '/usr/sbin/sshd sshd: admin@notty   '},1577021
+ADF705F9-3E99-5E54-9362-1C316A68775F,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1577036
+3E6B1B04-0702-501C-B18A-206709055D2A,{'subject': '/usr/sbin/sshd sshd: [accepted]    '},1577037
+D6C68B07-5843-5CC6-9FD0-ABA3150D6C30,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1577038
+2112D882-F8C1-5228-A224-8448D17E1284,{'subject': '/usr/sbin/sshd sshd: admin [priv]  '},1577191
+B45850B8-0C0C-516A-9426-6155103B5658,{'subject': '/usr/sbin/sshd sshd: admin@pts/3   '},1577192
+84053D48-9767-59AE-A797-BAC5E4ED3368,{'subject': '/usr/sbin/sshd /usr/sbin/sshd -D'},1773434
+12000000-9652-CA02-0000-000000000000,{'file': '/run/shm/lc'},4700490
+0100D00F-3437-3C00-0000-00004B61DC5C,{'file': '/var/log/sshdlog'},4700734

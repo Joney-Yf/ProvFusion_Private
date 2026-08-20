@@ -76,6 +76,13 @@ DATASETS = {
         "legacy_gt": os.path.expanduser("~/guard/Ground_Truth/ground_truth_nids_cadets_e5.pt"),
         "legacy_map": os.path.join(_V3_DIR, "CADETS_E5_attack_to_nids.pt"),
     },
+    "THEIA_E5": {
+        "csvs_and_windows": [
+            ("E5-THEIA/node_theia_e5_attack_0515.csv", [1557946020000000000, 1557947280000000000]),
+        ],
+        "legacy_gt": os.path.expanduser("~/guard/Ground_Truth/ground_truth_nids_theia_e5.pt"),
+        "legacy_map": os.path.join(_V3_DIR, "THEIA_E5_attack_to_nids.pt"),
+    },
     "CLEARSCOPE_E5": {
         "csvs_and_windows": [
             ("E5-CLEARSCOPE/node_clearscope_e5_appstarter_0515.csv",     [1557949080000000000, 1557951540000000000]),
