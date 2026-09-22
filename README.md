@@ -80,6 +80,7 @@ original DARPA JSON logs, with no reliance on any prebuilt data:
 | **CLEARSCOPE_E3** (regenerated) | 7 | 7 | `checkpoints/CLEARSCOPE_E3_regen_emb25_lr0.003_wd0.001_wdf0_e100_h4_tp7_fp7.pt` |
 | **CADETS_E5** (regenerated) | 7 | 9 | `checkpoints/CADETS_E5_regen_d64_mask0.1_h8_wd1e-4_wdf2e-6_ep500_epf20_r27_tp7_fp9.pt` (also r15, r31) |
 | **THEIA_E5** (regenerated) | 13 | 2 | `checkpoints/THEIA_E5_regen_d64_mask0.1_h8_wd1e-4_wdf5e-6_ep500_epf10_tp13_fp2.pt` |
+| **CLEARSCOPE_E5** (regenerated) | 10 | 14 | `checkpoints/CLEARSCOPE_E5_regen_emb5_d64_h8_mask0.1_mp200_mpf20_wd1e-4_wdf5e-5_tp10_fp14.pt` |
 
 > **On randomness.** The edge-reconstruction (link-prediction) head trains with
 > `shuffle=True` and multi-worker data loading, so it is **not bit-reproducible**:
@@ -272,7 +273,7 @@ CUDA_VISIBLE_DEVICES=0 python main_transductive.py --device 0 \
   --linear_prob --scheduler --use_cfg --seeds 1 --normalization_method percentile
 ```
 
-Validated end-to-end on CADETS_E3, THEIA_E3, CLEARSCOPE_E3, CADETS_E5 and THEIA_E5. Because Word2Vec
+Validated end-to-end on CADETS_E3, THEIA_E3, CLEARSCOPE_E3, CADETS_E5, THEIA_E5 and CLEARSCOPE_E5. Because Word2Vec
 is not bit-reproducible across machines, a fresh regeneration is a fresh embedding draw —
 sweep `lr` / `weight_decay` around the Option-D config and rerun per *On randomness*.
 
@@ -300,6 +301,7 @@ All runs: `--encoder gatedge --decoder gat --loss_fn sce --optimizer adam --num_
 | CADETS_E3 (regen, D) | 128 | 2 | 0.5 | 0.0015 | 100 | 50 | 0.01 | 0.0001 |
 | CADETS_E5 (regen, D) | 64 | 8 | 0.1 | 0.0015 | 500 | 20 | 1e-4 | 5e-6 |
 | THEIA_E5 (regen, D) | 64 | 8 | 0.1 | 0.0015 | 500 | 10 | 1e-4 | 5e-6 |
+| CLEARSCOPE_E5 (regen, D) | 64 | 8 | 0.1 | 0.0015 | 200 | 20 | 1e-4 | 5e-5 |
 
 ¹ Not recorded in the artifact name (`rpr_8` files); use the released checkpoint
 (Option A) for the exact number, or sweep `num_hidden ∈ {64, 128, 256}` when retraining.
