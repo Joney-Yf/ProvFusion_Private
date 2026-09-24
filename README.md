@@ -80,7 +80,7 @@ original DARPA JSON logs, with no reliance on any prebuilt data:
 | **CLEARSCOPE_E3** (regenerated) | 7 | 7 | `checkpoints/CLEARSCOPE_E3_regen_emb25_lr0.003_wd0.001_wdf0_e100_h4_tp7_fp7.pt` |
 | **CADETS_E5** (regenerated) | 7 | 9 | `checkpoints/CADETS_E5_regen_d64_mask0.1_h8_wd1e-4_wdf2e-6_ep500_epf20_r27_tp7_fp9.pt` (also r15, r31) |
 | **THEIA_E5** (regenerated) | 13 | 2 | `checkpoints/THEIA_E5_regen_d64_mask0.1_h8_wd1e-4_wdf5e-6_ep500_epf10_tp13_fp2.pt` |
-| **CLEARSCOPE_E5** (regenerated) | 10 | 14 | `checkpoints/CLEARSCOPE_E5_regen_emb5_d64_h8_mask0.1_mp200_mpf20_wd1e-4_wdf5e-5_tp10_fp14.pt` |
+| **CLEARSCOPE_E5** (regenerated) | 10 | 10 | `checkpoints/CLEARSCOPE_E5_regen_emb5_d64_h8_mask0.1_mp200_mpf20_wd1e-4_wdf5e-5_tp10_fp10.pt` (also a 10/14 draw) |
 
 > **On randomness.** The edge-reconstruction (link-prediction) head trains with
 > `shuffle=True` and multi-worker data loading, so it is **not bit-reproducible**:
